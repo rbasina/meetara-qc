@@ -9,7 +9,7 @@
 1. Beginner: notebooks 01 to 04
 2. Intermediate: notebooks 05 to 08
 3. Advanced: notebooks 09 to 12
-4. Detailed mapping is maintained in meetara-QC.md
+4. Detailed mapping is maintained in meeTARA-QC.md
 
 Use the chapters for conceptual learning first, then use the matching notebook for hands-on practice.
 

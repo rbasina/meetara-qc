@@ -1,4 +1,4 @@
-# Core runtime for MeeTARA QC beginner notebooks
+# Core runtime for meeTARA QC beginner notebooks
 qiskit>=2.5,<3
 qiskit-aer>=0.17,<0.18
 numpy>=2.5,<3

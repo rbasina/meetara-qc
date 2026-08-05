@@ -1,4 +1,4 @@
-# MeeTARA QC Course Map
+# meeTARA QC Course Map
 
 This file is the operational map that keeps chapters and notebooks in sync.
 

@@ -1,6 +1,6 @@
 # Visuals and Animation Guide
 
-Use this guide to add visual flow and better learning UX to MeeTARA QC.
+Use this guide to add visual flow and better learning UX to meeTARA QC.
 
 ## 1. Circuit diagrams (recommended)
 

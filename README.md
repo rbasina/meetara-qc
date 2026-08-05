@@ -1,6 +1,6 @@
-# MeeTARA QC: Quantum Evaluation Zero to Hero
+# meeTARA QC: Quantum Evaluation Zero to Hero
 
-MeeTARA QC is a structured tutorial repository that teaches quantum computing through an evaluation and benchmarking mindset.
+meeTARA QC is a structured tutorial repository that teaches quantum computing through an evaluation and benchmarking mindset.
 
 The course starts from fundamentals and progresses to expert benchmarking practice with reproducibility and cost-awareness.
 
@@ -20,7 +20,7 @@ Chapters are the primary learning path: read the chapter first for concepts and 
 ## Start Here
 1. Setup and environment: GETTING_STARTED.md
 2. Full curriculum and outcomes: SYLLABUS.md
-3. Chapter and notebook map: meetara-QC.md
+3. Chapter and notebook map: meeTARA-QC.md
 4. Diagrams and visual flow guide: chapters/VISUALS_AND_ANIMATIONS_GUIDE.md
 5. Real-world scenario playbook: chapters/REAL_WORLD_EXAMPLES_PLAYBOOK.md
 

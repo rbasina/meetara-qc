@@ -10,8 +10,8 @@ Use this guide to set up your local environment and run the course in the intend
 ## 2. Clone Repository
 
 ```powershell
-git clone https://github.com/rbasina/meetara-qc.git
-cd meetara-qc
+git clone https://github.com/rbasina/meeTARA-qc.git
+cd meeTARA-qc
 ```
 
 ## 3. Create and Activate Virtual Environment
