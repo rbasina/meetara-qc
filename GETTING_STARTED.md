@@ -25,7 +25,7 @@ python -m pip install --upgrade pip
 ## 4. Install Core Packages
 
 ```powershell
-pip install qiskit qiskit-aer numpy pandas matplotlib jupyter
+pip install -r requirements.txt
 ```
 
 Optional for hardware chapters:
