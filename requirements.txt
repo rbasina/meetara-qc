@@ -1,0 +1,11 @@
+# Core runtime for MeeTARA QC beginner notebooks
+qiskit>=2.5,<3
+qiskit-aer>=0.17,<0.18
+numpy>=2.5,<3
+pandas>=3.0,<4
+matplotlib>=3.11,<4
+jupyter>=1.1,<2
+ipykernel>=7.3,<8
+
+# Optional (hardware chapters)
+# qiskit-ibm-runtime>=0.40
