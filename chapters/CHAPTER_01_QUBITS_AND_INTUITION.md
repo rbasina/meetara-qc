@@ -22,7 +22,7 @@ Read this chapter first, then open [Notebook 01](../notebooks/beginner/notebook-
 ## Visual Learning Map
 ```mermaid
 flowchart LR
-	A[Prepare |0>] --> B[Apply H gate]
+	A[Prepare zero state] --> B[Apply H gate]
 	B --> C[Superposition]
 	C --> D[Measure once]
 	D --> E[0 or 1]
