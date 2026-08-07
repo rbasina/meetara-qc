@@ -19,6 +19,16 @@ Read this chapter first, then open [Notebook 06](../notebooks/intermediate/noteb
 2. Use repeated runs and clear thresholds for decisions.
 3. Report both quality and cost, not quality alone.
 
+## Visual Learning Map
+```mermaid
+flowchart LR
+	A[Reference circuit] --> B[Ideal simulation]
+	A --> C[Noise-model simulation]
+	B --> D[Quality comparison]
+	C --> D
+	D --> E[Diagnose degradation pattern]
+	E --> F[Redesign or document limit]
+```
 
 ## 1-minute overview
 Noise models approximate hardware imperfections so you can test robustness before expensive hardware runs.

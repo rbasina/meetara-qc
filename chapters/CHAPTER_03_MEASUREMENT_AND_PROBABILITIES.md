@@ -19,6 +19,15 @@ Read this chapter first, then open [Notebook 03](../notebooks/beginner/notebook-
 2. Use repeated runs and clear thresholds for decisions.
 3. Report both quality and cost, not quality alone.
 
+## Visual Learning Map
+```mermaid
+flowchart LR
+    A[Quantum state] --> B[Run N shots]
+    B --> C[Observed counts]
+    C --> D[Estimated probability]
+    D --> E[Sampling uncertainty]
+    E --> F[Confidence-aware decision]
+```
 
 ## 1-minute overview
 Quantum measurements are probabilistic. You do not validate a circuit from one run; you validate it from outcome distributions across many shots.

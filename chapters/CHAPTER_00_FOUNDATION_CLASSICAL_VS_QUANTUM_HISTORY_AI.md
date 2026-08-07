@@ -19,6 +19,17 @@ Read this chapter first, then move to [Notebook 01](../notebooks/beginner/notebo
 2. Use repeated runs and clear thresholds for decisions.
 3. Report both quality and cost, not quality alone.
 
+## Visual Learning Map
+```mermaid
+flowchart LR
+	A[Classical problem] --> B[Identify costly subproblem]
+	B --> C{Quantum fit?}
+	C -- No --> D[Use classical method]
+	C -- Yes --> E[Build hybrid experiment]
+	E --> F[Compare against baseline]
+	F --> G[Report bounded conclusion]
+```
+
 Before Chapter 01, learners should understand three things:
 1. How classical computing differs from quantum computing.
 2. How quantum computing evolved historically.

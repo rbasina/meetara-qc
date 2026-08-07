@@ -19,6 +19,15 @@ Read this chapter first, then open [Notebook 07](../notebooks/intermediate/noteb
 2. Use repeated runs and clear thresholds for decisions.
 3. Report both quality and cost, not quality alone.
 
+## Visual Learning Map
+```mermaid
+flowchart LR
+	A[Choose task and budget] --> B[Run candidate settings]
+	B --> C[Measure quality]
+	C --> D[Measure stability and cost]
+	D --> E[Compare shared-budget baseline]
+	E --> F[Select defensible operating point]
+```
 
 ## 1-minute overview
 This chapter moves from gate-level tests to algorithm-level evaluation using Grover-style and simple variational workflows.

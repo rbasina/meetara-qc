@@ -19,6 +19,17 @@ Read this chapter first, then open [Notebook 04](../notebooks/beginner/notebook-
 2. Use repeated runs and clear thresholds for decisions.
 3. Report both quality and cost, not quality alone.
 
+## Visual Learning Map
+```mermaid
+flowchart LR
+    A[Define expected result] --> B[Build circuit]
+    B --> C[Run ideal simulator]
+    C --> D[Compare observed counts]
+    D --> E{Pass threshold?}
+    E -- Yes --> F[Record baseline]
+    E -- Investigate --> G[Check circuit and mapping]
+    G --> B
+```
 
 ## 1-minute overview
 A simulator gives a controlled environment for baseline evaluation before moving to hardware.

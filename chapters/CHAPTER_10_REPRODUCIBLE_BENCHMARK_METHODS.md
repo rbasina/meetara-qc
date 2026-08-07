@@ -19,6 +19,15 @@ Read this chapter first, then open [Notebook 10](../notebooks/advanced/notebook-
 2. Use repeated runs and clear thresholds for decisions.
 3. Report both quality and cost, not quality alone.
 
+## Visual Learning Map
+```mermaid
+flowchart LR
+	A[Predeclare protocol] --> B[Capture environment and inputs]
+	B --> C[Execute repeated runs]
+	C --> D[Save raw artifacts]
+	D --> E[Re-run from record]
+	E --> F[Compare against tolerance]
+```
 
 ## 1-minute overview
 Reproducibility turns benchmark results from anecdote into evidence.

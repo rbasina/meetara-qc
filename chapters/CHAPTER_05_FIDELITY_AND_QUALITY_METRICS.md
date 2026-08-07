@@ -19,6 +19,15 @@ Read this chapter first, then open [Notebook 05](../notebooks/intermediate/noteb
 2. Use repeated runs and clear thresholds for decisions.
 3. Report both quality and cost, not quality alone.
 
+## Visual Learning Map
+```mermaid
+flowchart LR
+	A[Expected distribution] --> C[Compute comparison metric]
+	B[Observed distribution] --> C
+	C --> D[TVD or overlap score]
+	D --> E[Apply declared threshold]
+	E --> F[Pass or investigate]
+```
 
 ## 1-minute overview
 Fidelity measures how close your observed quantum state or outcome distribution is to the expected target.

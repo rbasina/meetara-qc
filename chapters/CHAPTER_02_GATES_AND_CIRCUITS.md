@@ -19,6 +19,15 @@ Read this chapter first, then open [Notebook 02](../notebooks/beginner/notebook-
 2. Use repeated runs and clear thresholds for decisions.
 3. Report both quality and cost, not quality alone.
 
+## Visual Learning Map
+```mermaid
+flowchart LR
+	A[Initial qubits] --> B[Single-qubit gates]
+	B --> C[State transformation]
+	C --> D[CX gate]
+	D --> E[Entangled correlation]
+	E --> F[Measurement outcomes]
+```
 
 ## 1-minute overview
 Quantum gates transform qubit states. A quantum circuit is an ordered set of gates plus measurement.

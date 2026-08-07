@@ -19,6 +19,16 @@ Read this chapter first, then open [Notebook 08](../notebooks/intermediate/noteb
 2. Use repeated runs and clear thresholds for decisions.
 3. Report both quality and cost, not quality alone.
 
+## Visual Learning Map
+```mermaid
+flowchart LR
+	A[Freeze circuit and protocol] --> B[Simulator repeats]
+	A --> C[Hardware repeats]
+	B --> D[Shared metrics]
+	C --> D
+	D --> E[Quality and resource delta]
+	E --> F[Bounded comparison claim]
+```
 
 ## 1-minute overview
 This chapter teaches fair comparison between simulator and hardware executions using controlled protocols.

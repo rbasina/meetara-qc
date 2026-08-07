@@ -19,6 +19,15 @@ Read this chapter first, then open [Notebook 12](../notebooks/advanced/notebook-
 2. Use repeated runs and clear thresholds for decisions.
 3. Report both quality and cost, not quality alone.
 
+## Visual Learning Map
+```mermaid
+flowchart LR
+	A[State testable claim] --> B[Define baselines and protocol]
+	B --> C[Run and preserve evidence]
+	C --> D[Analyze quality cost and stability]
+	D --> E[Document limitations]
+	E --> F[Publish bounded conclusion]
+```
 
 ## 1-minute overview
 The capstone consolidates all prior chapters into a full benchmark study with evidence, tradeoffs, and reproducibility artifacts.

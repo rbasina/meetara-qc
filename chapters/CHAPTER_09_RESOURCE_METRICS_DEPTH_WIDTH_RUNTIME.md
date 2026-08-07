@@ -19,6 +19,16 @@ Read this chapter first, then open [Notebook 09](../notebooks/advanced/notebook-
 2. Use repeated runs and clear thresholds for decisions.
 3. Report both quality and cost, not quality alone.
 
+## Visual Learning Map
+```mermaid
+flowchart LR
+	A[Candidate circuit] --> B[Measure quality]
+	A --> C[Collect depth width shots runtime]
+	B --> D{Minimum quality met?}
+	C --> D
+	D -- Yes --> E[Rank quality per cost]
+	D -- No --> F[Reject or redesign]
+```
 
 ## 1-minute overview
 Resource metrics explain the compute cost of quantum workflows and are essential for practical benchmarking.

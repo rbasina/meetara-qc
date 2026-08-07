@@ -19,6 +19,16 @@ Read this chapter first, then open [Notebook 01](../notebooks/beginner/notebook-
 2. Use repeated runs and clear thresholds for decisions.
 3. Report both quality and cost, not quality alone.
 
+## Visual Learning Map
+```mermaid
+flowchart LR
+	A[Prepare |0>] --> B[Apply H gate]
+	B --> C[Superposition]
+	C --> D[Measure once]
+	D --> E[0 or 1]
+	C --> F[Repeat many shots]
+	F --> G[Estimate probabilities]
+```
 
 ## 1-minute overview
 A qubit is the basic unit of quantum information. Unlike a classical bit that is either 0 or 1, a qubit can be in a superposition of both states.

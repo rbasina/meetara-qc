@@ -19,6 +19,15 @@ Read this chapter first, then open [Notebook 11](../notebooks/advanced/notebook-
 2. Use repeated runs and clear thresholds for decisions.
 3. Report both quality and cost, not quality alone.
 
+## Visual Learning Map
+```mermaid
+flowchart LR
+	A[Classical optimizer proposes parameters] --> B[Quantum circuit estimates objective]
+	B --> C[Finite-shot result]
+	C --> D[Optimizer updates parameters]
+	D --> A
+	C --> E[Summarize seeds quality and cost]
+```
 
 ## 1-minute overview
 This chapter defines a professional evaluation framework for VQE and QAOA style hybrid algorithms.
