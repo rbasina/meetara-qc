@@ -28,6 +28,19 @@ Evaluate one quantum workflow end-to-end and produce a publishable-style report.
 
 The capstone should demonstrate disciplined evaluation, not only technical implementation.
 
+## Frame a Claim That Evidence Can Support
+Start with a narrow, testable claim. For example: “For this two-qubit task, under this shot budget and simulator noise model, configuration A achieved lower TVD than configuration B.” This is stronger than “configuration A is better” because it states the task, budget, metric, and execution conditions.
+
+Your conclusion should distinguish three levels of evidence:
+1. **Correctness evidence:** the circuit and scoring code behave as expected on a controlled reference.
+2. **Performance evidence:** one candidate meets a declared quality and resource criterion better than its baseline.
+3. **Generalization evidence:** the result remains stable across repeats, instances, or execution contexts.
+
+Most course capstones can establish the first two. Do not claim general quantum advantage unless the experiment genuinely supports the much stronger third level against a competitive classical baseline.
+
+### Plan the experiment before the result exists
+Write the problem instance, candidate configurations, primary metric, secondary metrics, quality threshold, repeat count, shot budget, exclusion criteria, and comparison baseline before the main run. This makes negative results interpretable and prevents unintentional selection of only favorable trials.
+
 ## Capstone structure
 
 | Section | Required content |
@@ -62,6 +75,8 @@ The capstone should demonstrate disciplined evaluation, not only technical imple
 3. Resource metrics reported with quality metrics.
 4. One classical baseline comparison.
 
+Add uncertainty to the main table: confidence interval, standard deviation, or robust quantiles. State why the selected summary is appropriate for the distribution of runs.
+
 ## Grading rubric (recommended)
 
 | Dimension | Points |
@@ -83,6 +98,8 @@ Well-documented negative findings are often more useful than unverified positive
 1. Making broad claims from narrow test scope.
 2. Omitting baseline details.
 3. Reporting conclusions without uncertainty or limitation notes.
+4. Treating a simulator result as proof of hardware utility.
+5. Calling a result a speedup without an equal-budget classical comparison.
 
 ## Final checkpoint
 1. Can another person reproduce your main table with your artifacts?

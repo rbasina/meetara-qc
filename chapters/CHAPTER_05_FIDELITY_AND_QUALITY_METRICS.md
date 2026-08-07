@@ -48,6 +48,20 @@ When you only have measurement counts, start with these:
 
 Where $p$ is expected distribution and $q$ is observed distribution.
 
+## Choose the Metric That Matches What You Observed
+State fidelity and distribution similarity answer related but different questions. State fidelity compares quantum states and can detect phase errors, but it normally requires a simulator, tomography, or another state-sensitive method. Counts alone discard phase information, so a count-based overlap can look perfect even when the underlying state is wrong for a later interference step.
+
+TVD is often the best first metric for count data because it has an operational reading: it is the largest possible difference in probability assigned to any event by the two distributions. A TVD of $0.08$ means the observed distribution is close, but not identical, to the reference. It does not by itself prove that the difference is caused by device noise; finite-shot variation can also contribute.
+
+### Worked binary example
+For an expected balanced output $p=(0.5,0.5)$ and observed output $q=(0.56,0.44)$:
+
+$$
+\operatorname{TVD}(p,q)=\frac{1}{2}(|0.50-0.56|+|0.50-0.44|)=0.06
+$$
+
+The distribution-overlap score is close to 1, so this is likely acceptable for a simulator sanity check. The correct judgment still depends on the predeclared threshold, shot count, and repeat-to-repeat spread.
+
 ## Suggested benchmark policy
 
 | Scenario | Suggested starter threshold |
@@ -55,6 +69,8 @@ Where $p$ is expected distribution and $q$ is observed distribution.
 | Simulator reference lab | Fidelity >= 0.98 |
 | Noisy simulation lab | Fidelity >= 0.90 |
 | Early hardware lab | Task-specific baseline and tolerance |
+
+These are instructional starting points, not universal hardware standards. A threshold that is strict enough for a deterministic one-qubit circuit may be unrealistic for a deep multi-qubit circuit. Define the metric and tolerance from the task’s error consequences.
 
 ## Step-by-step workflow
 1. Define expected distribution before you run.

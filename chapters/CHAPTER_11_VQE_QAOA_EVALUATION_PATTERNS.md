@@ -37,6 +37,17 @@ This chapter teaches how to evaluate these algorithms with repeatable evidence r
 | Resource use | Iterations, depth, runtime | Layers, shots, runtime |
 | Robustness | Performance under noise shifts | Decision consistency under repeats |
 
+## The Hybrid Optimization Loop
+VQE and QAOA are not single circuits. They are iterative experiments. At iteration $t$, a classical optimizer proposes parameters $\theta_t$, the quantum circuit estimates an objective from finite shots, and the optimizer uses that noisy estimate to choose $\theta_{t+1}$. Evaluation therefore needs to measure both the final answer and the path taken to reach it.
+
+For VQE, the target is commonly an energy expectation value. Lower energy is better, but compare it to a known reference or classical estimate when available. For QAOA, report the objective value and an approximation ratio when the task has a known optimum or valid bound. A raw score without the problem scale is difficult to interpret.
+
+### Baselines and budget parity
+A classical baseline should receive comparable tuning attention. State the solver, its settings, runtime budget, stopping rule, and solution quality. Do not compare a tuned quantum configuration to an untuned classical method, or a quantum run using thousands of objective evaluations to a classical run stopped after a few steps.
+
+### Uncertainty from shots and seeds
+Use multiple optimizer seeds and, where practical, multiple shot-seed or measurement-repeat settings. Summarize median, mean, spread, success rate, and worst-case outcome. The median is useful when rare optimizer failures make the mean unstable.
+
 ## Practical evaluation workflow
 1. Choose one VQE-style or QAOA-style objective.
 2. Run multiple initializations or parameter seeds.
@@ -58,6 +69,8 @@ This chapter teaches how to evaluate these algorithms with repeatable evidence r
 | High best, low mean | Unstable optimization | Increase repeats or adjust optimizer |
 | Low variance, moderate score | Reliable candidate | Prefer for constrained deployments |
 | Strong noise sensitivity | Fragile configuration | Reduce depth or redesign ansatz |
+
+An ansatz is the parameterized circuit family. Increasing its depth may improve expressiveness, but it also adds parameters, optimization difficulty, and noise exposure. More expressive is not automatically more useful.
 
 ## Recommended reporting
 1. Best score and average score across repeats.

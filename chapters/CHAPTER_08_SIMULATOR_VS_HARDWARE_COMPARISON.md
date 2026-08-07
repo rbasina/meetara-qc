@@ -38,6 +38,17 @@ The purpose is to identify practical utility under real constraints, not to chas
 | Decision thresholds | Predefine before runs |
 | Repeats | Use same repeat policy |
 
+## Separate Three Different Questions
+Simulator-versus-hardware studies often mix three questions that need different measurements:
+1. **Does the circuit behave correctly?** Compare output quality against the expected distribution.
+2. **Does the simulator predict device behavior?** Compare simulator and hardware distributions using the same metric.
+3. **Is the hardware workflow practically useful?** Compare end-to-end quality, execution time, queue time, and cost against a classical baseline.
+
+A low simulator-hardware delta does not establish a quantum speedup. Likewise, a long hardware queue does not mean the quantum circuit itself is slow. Keep compile time, queue time, execution time, and post-processing time as separate fields.
+
+### Hardware context belongs in the record
+For each hardware run, record backend name, calibration timestamp if available, qubit layout or transpilation settings, measurement mitigation status, and run time. Device calibration changes can explain differences between otherwise identical trials.
+
 ## Recommended experiment protocol
 1. Freeze one circuit and one parameter set.
 2. Define thresholds before execution.
@@ -45,6 +56,8 @@ The purpose is to identify practical utility under real constraints, not to chas
 4. Run hardware repeats with matching shots.
 5. Compare deltas and decision consistency.
 6. Record limitations and possible confounders.
+
+If a noise-model simulator is used, state whether it is ideal, generic, or derived from a specific backend calibration. Do not compare an ideal simulator directly to hardware and call the difference “hardware error” without acknowledging the modeling gap.
 
 ## Comparison report table
 

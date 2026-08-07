@@ -24,13 +24,28 @@ Read this chapter first, then open [Notebook 01](../notebooks/beginner/notebook-
 A qubit is the basic unit of quantum information. Unlike a classical bit that is either 0 or 1, a qubit can be in a superposition of both states.
 
 ## Core concepts
-1. Basis states: |0> and |1>
-2. State vector form: alpha|0> + beta|1>
-3. Probability rule: |alpha|^2 + |beta|^2 = 1
+1. Basis states: $|0\rangle$ and $|1\rangle$
+2. State vector form: $|\psi\rangle=\alpha|0\rangle+\beta|1\rangle$
+3. Probability rule: $|\alpha|^2+|\beta|^2=1$
 4. Measurement collapses superposition to one basis state
 
+## From Amplitudes to Outcomes
+The symbols $\alpha$ and $\beta$ are amplitudes, not probabilities. An amplitude can be negative or complex, so it cannot be read directly as a chance. The probability of measuring 0 is $|\alpha|^2$ and the probability of measuring 1 is $|\beta|^2$.
+
+For example, the equal-superposition state is:
+
+$$
+|+\rangle=\frac{|0\rangle+|1\rangle}{\sqrt{2}}
+$$
+
+Both amplitudes have magnitude $1/\sqrt{2}$, so each measurement outcome has probability $1/2$. Repeating the same circuit estimates these probabilities; it does not reveal the unmeasured state of an individual qubit.
+
+### Why phase is deferred, not irrelevant
+States such as $(|0\rangle+|1\rangle)/\sqrt{2}$ and $(|0\rangle-|1\rangle)/\sqrt{2}$ produce the same 50/50 result when measured immediately. They are nevertheless different states because later gates can make their phase difference visible through interference. Chapter 02 introduces the gates that create and use this effect.
+
+
 ## Why this matters for evaluation
-Evaluation starts with understanding expected probabilities. If a circuit should produce 50/50 outcomes but gives 80/20 repeatedly, your circuit quality is likely poor or noisy.
+Evaluation starts with understanding expected probabilities. If a circuit should produce 50/50 outcomes but gives 80/20 repeatedly, your circuit setup, measurement mapping, or noise assumptions require investigation. One 80/20 sample at a very low shot count is not enough evidence; a persistent deviation across repeats is.
 
 ## Practical example
 Goal: create a qubit in superposition and measure outcomes.
@@ -55,7 +70,7 @@ Expected behavior: counts close to 50 percent 0 and 50 percent 1.
 
 | Metric | Target | Example pass rule |
 |---|---|---|
-| p(0) and p(1) balance | Near 0.5 each | At 1024 shots, |p(0)-p(1)| <= 0.10 |
+| p(0) and p(1) balance | Near 0.5 each | At 1024 shots, $\lvert p(0)-p(1)\rvert \leq 0.10$ |
 | Repeatability | Stable across repeats | Run 5 repeats, max deviation <= 0.08 |
 | Cost discipline | Reasonable shot budget | Start at 512, then 1024 or 2048 if needed |
 

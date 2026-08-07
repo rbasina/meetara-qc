@@ -29,6 +29,14 @@ Evaluate whether three simple circuits behave as expected:
 2. X-gate flip circuit
 3. H-gate superposition circuit
 
+## What a Simulator Can and Cannot Prove
+An ideal simulator applies the circuit model exactly. It is the right place to test circuit construction, expected distributions, bit ordering, and scoring logic. It does not demonstrate that the same circuit will perform equally well on hardware, because real devices add gate error, readout error, limited connectivity, and time-dependent calibration effects.
+
+Use an ideal simulator as a reference baseline. Then introduce a documented noise model in Chapter 06 before interpreting a simulator result as a hardware prediction.
+
+### A benchmark is a precommitted decision rule
+A benchmark is more than running code and looking at a chart. Before execution, define the expected distribution, metric, threshold, shots, repeats, and action for pass or investigate. This avoids choosing a threshold only after seeing a favorable result.
+
 ## Evaluation template
 For each circuit, record:
 1. Expected distribution
@@ -42,7 +50,7 @@ For each circuit, record:
 |---|---|---|
 | identity | Mostly 0 | p(0) >= 0.98 at 1024 shots |
 | x_flip | Mostly 1 | p(1) >= 0.98 at 1024 shots |
-| h_superposition | Near-balanced | |p(0)-p(1)| <= 0.10 at 1024 shots |
+| h_superposition | Near-balanced | $\lvert p(0)-p(1)\rvert \leq 0.10$ at 1024 shots |
 
 Use these as starter thresholds for simulator-first labs.
 

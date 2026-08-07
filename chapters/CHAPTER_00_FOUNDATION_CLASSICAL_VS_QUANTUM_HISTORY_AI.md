@@ -26,6 +26,13 @@ Before Chapter 01, learners should understand three things:
 
 This is a pre-chapter and does not change the 12 core chapter roadmap.
 
+## What Quantum Computing Is and Is Not
+Quantum computing uses physical systems whose states follow quantum mechanics. It is not a faster version of a laptop for every task. A quantum program prepares a quantum state, applies controlled transformations, and samples measurement outcomes. The useful result is usually a probability distribution or an estimate derived from many samples, not one deterministic answer from one execution.
+
+A classical bit is stored as either 0 or 1. A qubit can be prepared in a state that assigns amplitudes to both basis states. Measurement still returns an ordinary classical 0 or 1. This distinction matters: superposition does not mean a qubit can reveal both values at once.
+
+Quantum advantage is therefore task-specific. A credible claim must state the task, input size, quality metric, classical baseline, resource budget, and whether the comparison used ideal simulation or real hardware.
+
 ## Classical computing vs quantum computing
 
 ### Conceptual and practical comparison
@@ -62,6 +69,15 @@ Modern AI growth is constrained by:
 4. Data movement and inference latency constraints.
 
 Quantum computing is not a drop-in GPU replacement. Instead, it is a potential accelerator for specific subproblems in AI pipelines.
+
+### A practical decision rule
+Before considering a quantum approach, ask four questions:
+1. Is the expensive part of the workflow a clearly isolated optimization, sampling, or physics-simulation subproblem?
+2. Is there a strong classical baseline that can be measured under the same quality and budget constraints?
+3. Can the quantum circuit fit the available qubits, depth, and shot budget?
+4. Would a modest improvement in this subproblem change the end-to-end workflow outcome?
+
+If any answer is no, treat the quantum idea as a research experiment rather than a production acceleration claim.
 
 ## Practical examples: where quantum can assist AI workflows
 

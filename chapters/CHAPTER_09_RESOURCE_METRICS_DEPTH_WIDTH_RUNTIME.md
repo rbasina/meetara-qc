@@ -47,6 +47,14 @@ Professional benchmarking always reports quality and cost together. High quality
 
 Where $Q$ can be fidelity proxy, success probability, or objective score.
 
+## Resource Metrics Need Context
+Depth is a count of sequential operation layers after a specified circuit decomposition. Two circuits with the same depth can have very different error exposure if one uses noisier two-qubit gates or maps poorly to the device connectivity. Width tells you the number of qubits required, but not whether those qubits are available or well calibrated on a chosen backend.
+
+Runtime must be decomposed before comparison. Record at least compilation or transpilation time, queue time when applicable, quantum execution time, and classical post-processing time. Queue time affects user experience and cost planning, while execution time is the more relevant quantity for scaling a circuit itself.
+
+### Avoid misleading ratio scores
+Ratios such as $Q/T$ are useful for ranking candidates only when $Q$ has the same scale and meaning for every candidate. They can hide unacceptable absolute quality: a very fast but low-quality circuit may have a high ratio. Use a two-stage decision rule: first require minimum acceptable quality, then compare quality-per-cost among candidates that pass.
+
 ## Practical workflow
 1. Pick two or more candidate circuits for the same task.
 2. Keep target objective and thresholds identical.
@@ -66,6 +74,8 @@ Where $Q$ can be fidelity proxy, success probability, or objective score.
 1. Report quality with resource cost together.
 2. Compare alternatives on quality-per-cost, not quality alone.
 3. Keep measurement budgets explicit.
+
+For noisy hardware, also report the number of two-qubit gates, because they often dominate error exposure more directly than total gate count.
 
 ## Real-world interpretation pattern
 

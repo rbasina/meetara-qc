@@ -29,6 +29,18 @@ Quantum measurements are probabilistic. You do not validate a circuit from one r
 3. More shots usually reduce sampling variance.
 4. Expected distribution is your baseline for evaluation.
 
+## Sampling: What a Shot Actually Means
+One shot prepares and measures a circuit once. If an outcome has true probability $p$, then after $N$ independent shots its observed frequency $\hat{p}$ is an estimate of $p$, not the exact value. For a binary outcome, the approximate standard error is:
+
+$$
+\operatorname{SE}(\hat{p})=\sqrt{\frac{\hat{p}(1-\hat{p})}{N}}
+$$
+
+At the hardest-to-estimate point, $p=0.5$, the standard error is about $0.5/\sqrt{N}$. This means increasing shots by four cuts typical sampling error roughly in half, not by four. More shots improve precision but also increase execution cost.
+
+### Confidence intervals and repeated runs answer different questions
+A confidence interval describes uncertainty from finite sampling within one controlled run. Repeated runs also expose variation caused by changing random seeds, simulator settings, calibration drift, or hardware conditions. For a serious claim, report both the shot count and the repeat policy.
+
 ## Why this matters for evaluation
 Evaluation compares observed distributions against expected distributions. If expected is 50/50 and observed is far off, you investigate circuit design, noise, or execution settings.
 

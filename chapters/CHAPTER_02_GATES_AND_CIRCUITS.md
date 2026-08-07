@@ -24,13 +24,29 @@ Read this chapter first, then open [Notebook 02](../notebooks/beginner/notebook-
 Quantum gates transform qubit states. A quantum circuit is an ordered set of gates plus measurement.
 
 ## Core gates in this chapter
-1. X gate: flips |0> to |1>
+1. X gate: flips $|0\rangle$ to $|1\rangle$
 2. H gate: creates superposition
 3. Z gate: phase flip (important in interference patterns)
 4. CX gate: two-qubit entangling gate
 
+## Gates Change States, Not Just Labels
+Quantum gates are reversible linear transformations. Unlike an ordinary assignment such as “set the bit to 1,” a gate preserves enough information that its action can be reversed. For the gates used here:
+
+$$
+X|0\rangle=|1\rangle,\qquad X|1\rangle=|0\rangle
+$$
+
+$$
+H|0\rangle=\frac{|0\rangle+|1\rangle}{\sqrt{2}},\qquad H|1\rangle=\frac{|0\rangle-|1\rangle}{\sqrt{2}}
+$$
+
+The $Z$ gate leaves $|0\rangle$ unchanged and changes the sign of $|1\rangle$. That sign is a phase change: it may not change an immediate measurement count, but it changes how paths interfere after later gates.
+
+### What entanglement adds
+Apply $H$ to the first qubit and then controlled-X (CX) from the first to the second. The result is the Bell state $$(|00\rangle+|11\rangle)/\sqrt{2}$$. Each individual qubit looks random, but the pair is correlated: measuring one determines the compatible outcome of the other. Correlation alone is not proof of entanglement; the circuit preparation and measurement basis matter.
+
 ## Why this matters for evaluation
-Evaluation often checks whether a known gate sequence produces expected output distributions. Gate-level mistakes are a major source of benchmark failure.
+Evaluation often checks whether a known gate sequence produces expected output distributions. Gate-level mistakes are a major source of benchmark failure. Check bit order and measurement mapping before diagnosing a physics problem: a correctly built circuit can appear wrong if its classical output bits are read in the wrong order.
 
 ## Practical example A: deterministic flip
 ```python

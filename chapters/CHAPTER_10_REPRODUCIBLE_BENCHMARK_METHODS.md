@@ -57,11 +57,26 @@ Define this before execution:
 
 Changing these after looking at outcomes introduces bias.
 
+## Reproducible Does Not Always Mean Identical
+For stochastic algorithms and quantum hardware, a correct rerun may not reproduce every count exactly. The reproducible object is the protocol: the same environment, inputs, configuration, analysis, and decision rule should produce results within a declared tolerance.
+
+Define the tolerance before rerunning. For example, a simulator benchmark may require an identical decision plus a TVD change no larger than $0.02$, while a hardware study may permit a wider range due to calibration drift. A failed reproduction is evidence, not an inconvenience: determine whether the cause is an environment change, protocol drift, sampling variation, or device change.
+
+### Provenance checklist
+Save these fields with every benchmark run:
+1. Git commit or source version identifier.
+2. Python, package, and backend versions.
+3. Circuit source, transpilation settings, and random seeds where supported.
+4. Start time, backend or simulator configuration, shots, and repeat index.
+5. Raw outputs before aggregation.
+
 ## Practical workflow
 1. Define benchmark protocol before execution.
 2. Run repeated trials with fixed settings.
 3. Save artifacts and summary report.
 4. Re-run on fresh environment for verification.
+
+For hardware work, a fresh environment alone is insufficient. Repeat at a different time and compare against recorded backend calibration information.
 
 ## Reproducibility validation checklist
 

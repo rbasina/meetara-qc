@@ -36,6 +36,18 @@ The goal is not to remove all noise. The goal is to measure noise impact clearly
 | Gate error | Imperfect gate operations | Fidelity drop and leakage |
 | Decoherence | State quality degrades over time | Deeper circuits degrade faster |
 
+## How Noise Enters a Circuit
+Noise is not one number. Different mechanisms act at different points in the workflow:
+1. **Preparation error** means the initial state differs from the intended state.
+2. **Gate error** applies an imperfect transformation during an operation.
+3. **Decoherence** causes the state to lose useful quantum information while it waits or while gates run.
+4. **Readout error** changes the classical bit reported by measurement.
+
+Depolarizing-style noise tends to flatten a distribution toward uniform outcomes. Amplitude damping tends to bias a qubit toward $|0\rangle$. Readout error can create a misleading result even when the circuit state before measurement was correct. Diagnose the distribution pattern before deciding which mitigation or redesign is appropriate.
+
+### Noise models are hypotheses
+A simulator noise model is useful only when its assumptions are documented. It may use average gate and readout error rates, while a real device has qubit-specific errors, connectivity constraints, crosstalk, and calibration drift. Treat a noisy simulation as a sensitivity analysis, not a guarantee of hardware performance.
+
 ## Degradation metrics
 
 | Metric | Definition | Interpretation |
@@ -48,6 +60,8 @@ The goal is not to remove all noise. The goal is to measure noise impact clearly
 1. Run ideal simulation.
 2. Run noisy simulation with same circuit and shots.
 3. Compare key metrics (fidelity proxy, leakage, decision stability).
+
+Keep the circuit, transpilation settings, measurement mapping, shots, seeds where applicable, and scoring rule fixed. If two or more of these change, the observed delta cannot be attributed to noise alone.
 
 ## Practical code pattern (noise comparison)
 
