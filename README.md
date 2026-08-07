@@ -1,5 +1,9 @@
 # meeTARA QC: Quantum Evaluation Zero to Hero
 
+
+## Quantum Concepts & The Evaluation Mindset: From Foundation to Expert Benchmarking
+https://www.youtube.com/watch?v=AzqqgR0DVpY&list=PLC4mJKhf17kI
+
 meeTARA QC is a structured tutorial repository that teaches quantum computing through an evaluation and benchmarking mindset.
 
 The course starts from fundamentals and progresses to expert benchmarking practice with reproducibility and cost-awareness.
