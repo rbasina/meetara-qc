@@ -81,10 +81,10 @@ The Bloch sphere represents this state as a point on a unit sphere. The angle $\
 
 | Bloch-sphere location | State | Meaning in a computational-basis measurement |
 |---|---|---|
-| North pole | $|0\rangle$ | Always 0 |
-| South pole | $|1\rangle$ | Always 1 |
-| Positive x-axis | $|+\rangle=(|0\rangle+|1\rangle)/\sqrt{2}$ | 50/50 |
-| Negative x-axis | $|-\rangle=(|0\rangle-|1\rangle)/\sqrt{2}$ | 50/50 |
+| North pole | $\lvert 0\rangle$ | Always 0 |
+| South pole | $\lvert 1\rangle$ | Always 1 |
+| Positive x-axis | $\lvert{+}\rangle=(\lvert 0\rangle+\lvert 1\rangle)/\sqrt{2}$ | 50/50 |
+| Negative x-axis | $\lvert{-}\rangle=(\lvert 0\rangle-\lvert 1\rangle)/\sqrt{2}$ | 50/50 |
 
 The last two rows are the key lesson: position around the equator represents phase information that a direct computational-basis measurement cannot reveal.
 
@@ -107,14 +107,14 @@ This is not a trick. The circuit asks a different question of the same state. A 
 This three-step sequence is the most productive single experiment in the beginner tier. Each step is one gate, and the chain visits four distinct named states:
 
 ```
-|0>  --H-->  |+>  --Z-->  |->  --H-->  |1>
+|0⟩  --H-->  |+⟩  --Z-->  |-⟩  --H-->  |1⟩
 ```
 
 | Step | Gate | Input | Output | Bloch-sphere movement |
 |---|---|---|---|---|
-| 1 | H | $|0\rangle$ (north pole) | $|+\rangle$ (positive x) | Rotates from Z axis to X axis |
-| 2 | Z | $|+\rangle$ (positive x) | $|-\rangle$ (negative x) | Flips around Z axis, changes relative phase |
-| 3 | H | $|-\rangle$ (negative x) | $|1\rangle$ (south pole) | Rotates from X axis to south pole |
+| 1 | H | $\lvert 0\rangle$ (north pole) | $\lvert{+}\rangle$ (positive x) | Rotates from Z axis to X axis |
+| 2 | Z | $\lvert{+}\rangle$ (positive x) | $\lvert{-}\rangle$ (negative x) | Flips around Z axis, changes relative phase |
+| 3 | H | $\lvert{-}\rangle$ (negative x) | $\lvert 1\rangle$ (south pole) | Rotates from X axis to south pole |
 
 After step 1, a Z-basis measurement gives 50/50. After step 2, a Z-basis measurement still gives 50/50. The phase change from step 2 is only visible after the H gate in step 3 turns it into a population difference. This is interference made concrete.
 
