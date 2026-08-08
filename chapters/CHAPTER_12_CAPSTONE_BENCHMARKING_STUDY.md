@@ -61,18 +61,24 @@ Write the problem instance, candidate configurations, primary metric, secondary 
 
 ## Required Research-Style Report
 
-Submit the report in this order so a reviewer can trace every conclusion back to the method and raw evidence:
+Submit the report in this 16-section order so a reviewer can trace every conclusion back to the method and raw evidence:
 
-1. Executive summary and bounded claim.
-2. Research question and hypothesis.
-3. Problem definition and task instance.
-4. Classical and quantum baselines.
-5. Experimental protocol and configuration manifest.
-6. Metrics, uncertainty method, and decision thresholds.
-7. Results and resource analysis.
-8. Negative result and failure analysis.
-9. Reproducibility artifact index.
-10. Limitations and conclusion.
+1. **Executive Summary** — one paragraph: claim, method, key metric, decision.
+2. **Research Question** — the specific question the experiment answers.
+3. **Hypothesis** — the predicted outcome and its basis.
+4. **Problem Definition** — task instance, input size, and success criteria.
+5. **Classical Baseline** — algorithm, settings, quality score, and runtime budget.
+6. **Quantum Method** — circuit family, ansatz or algorithm structure, and parameter strategy.
+7. **Experimental Protocol** — shot count, repeats, exclusion criteria, and decision rule, all written before running.
+8. **Hardware or Simulator Configuration** — backend name, transpiler settings, optimization level, noise model, and calibration timestamp.
+9. **Metrics** — primary and secondary metrics with the justification for each choice.
+10. **Statistical Analysis** — confidence intervals or repeat-run spread, practical-significance interpretation, and multiple-comparison note if applicable.
+11. **Results** — tables and charts from the raw data, including all repeats and failure cases.
+12. **Resource Analysis** — depth, width, one-qubit gate count, two-qubit gate count, shots, and runtime decomposed by phase.
+13. **Reproducibility** — Git revision, environment snapshot path, manifest file path, and reproduction-test outcome.
+14. **Limitations** — scope boundaries, confounders, and unsupported extrapolations.
+15. **Conclusion** — claim bounded to tested scope, referencing section 11 evidence.
+16. **Raw Artifacts** — index of raw counts, manifest, benchmark log row, and notebook.
 
 ### A negative result is required
 

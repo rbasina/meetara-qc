@@ -102,6 +102,36 @@ $$
 
 This is not a trick. The circuit asks a different question of the same state. A measurement result is meaningful only alongside the basis in which it was measured.
 
+## The Circuit Chain: One Path Through the Bloch Sphere
+
+This three-step sequence is the most productive single experiment in the beginner tier. Each step is one gate, and the chain visits four distinct named states:
+
+```
+|0>  --H-->  |+>  --Z-->  |->  --H-->  |1>
+```
+
+| Step | Gate | Input | Output | Bloch-sphere movement |
+|---|---|---|---|---|
+| 1 | H | $|0\rangle$ (north pole) | $|+\rangle$ (positive x) | Rotates from Z axis to X axis |
+| 2 | Z | $|+\rangle$ (positive x) | $|-\rangle$ (negative x) | Flips around Z axis, changes relative phase |
+| 3 | H | $|-\rangle$ (negative x) | $|1\rangle$ (south pole) | Rotates from X axis to south pole |
+
+After step 1, a Z-basis measurement gives 50/50. After step 2, a Z-basis measurement still gives 50/50. The phase change from step 2 is only visible after the H gate in step 3 turns it into a population difference. This is interference made concrete.
+
+```python
+from qiskit import QuantumCircuit
+from qiskit_aer import AerSimulator
+
+qc = QuantumCircuit(1, 1)
+qc.h(0)   # |0> -> |+>
+qc.z(0)   # |+> -> |->
+qc.h(0)   # |-> -> |1>
+qc.measure(0, 0)
+
+counts = AerSimulator().run(qc, shots=1024).result().get_counts()
+print(counts)  # expect: {'1': ~1024}
+```
+
 ## Interference Experiment: States That Initially Look the Same
 
 The following two circuits produce the same 50/50 distribution if measured immediately after their first H gate. Add a second H gate, however, and their relative phase becomes visible.

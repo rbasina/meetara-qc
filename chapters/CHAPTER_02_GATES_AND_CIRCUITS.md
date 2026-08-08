@@ -71,6 +71,35 @@ This gives you a reliable circuit-debugging identity. Two X gates cancel, and tw
 
 Read a circuit from left to right in its diagram, but calculate state evolution by applying the rightmost matrix first. In general, $HZ \ne ZH$. Gates that do not commute cannot be reordered freely. This is why a quantum circuit is an ordered program, not merely a bag of operations.
 
+### Circuit identities to discover
+
+The following identities are worth verifying by running the circuit and checking counts, then by multiplying the matrices:
+
+| Identity | Circuit meaning |
+|---|---|
+| $H^2=I$ | Two H gates cancel; the state returns to its starting point |
+| $X^2=I$ | Two X gates cancel |
+| $HZH=X$ | Sandwiching Z between two H gates produces an X gate |
+
+The last one is the most important. It shows that the same physical operation looks like a phase flip in one basis and a bit flip in another. To verify it by circuit:
+
+```python
+from qiskit import QuantumCircuit
+from qiskit_aer import AerSimulator
+
+# HZH should flip |0> to |1>, just like X does
+qc = QuantumCircuit(1, 1)
+qc.h(0)
+qc.z(0)
+qc.h(0)
+qc.measure(0, 0)
+
+counts = AerSimulator().run(qc, shots=512).result().get_counts()
+print(counts)  # expect: {'1': ~512}, same as a plain X gate
+```
+
+This identity also explains why the circuit chain in Chapter 01 ends at $|1\rangle$: the $HZH$ sequence acts like $X$ on $|0\rangle$.
+
 ### Why a small gate set is powerful
 
 Arbitrary single-qubit rotations combined with an entangling two-qubit gate such as CX form a universal model of quantum computation: sufficiently long sequences can approximate any operation on a finite set of qubits. Universality does not make every circuit practical. Longer decompositions add depth and, on hardware, more opportunities for error.

@@ -46,6 +46,22 @@ Use an ideal simulator as a reference baseline. Then introduce a documented nois
 ### A benchmark is a precommitted decision rule
 A benchmark is more than running code and looking at a chart. Before execution, define the expected distribution, metric, threshold, shots, repeats, and action for pass or investigate. This avoids choosing a threshold only after seeing a favorable result.
 
+## The Quantum Quality Control Template
+
+Every benchmark in this course should follow this seven-field structure. Fill it out before writing any code.
+
+| Field | What to write | Example for H-gate circuit |
+|---|---|---|
+| **Question** | What is being tested? | Does this circuit produce the expected balanced distribution? |
+| **Hypothesis** | What does theory predict? | $P(0)=P(1)=0.5$ |
+| **Protocol** | Repeats × shots, fixed settings | 5 repeats × 1024 shots, AerSimulator, no noise |
+| **Metric** | How to measure agreement | TVD between observed and expected |
+| **Uncertainty** | How to quantify sampling variation | 95% CI on each frequency |
+| **Decision rule** | Predefined pass condition | TVD $\leq 0.05$ across all 5 repeats |
+| **Action** | What to do with each outcome | Pass → record baseline. Investigate → check mapping and rerun. |
+
+The result then fills two fields: the measured metric value with its uncertainty, and the decision it triggers. Writing these fields first transforms a run into an experiment.
+
 ## Evaluation template
 For each circuit, record:
 1. Expected distribution
