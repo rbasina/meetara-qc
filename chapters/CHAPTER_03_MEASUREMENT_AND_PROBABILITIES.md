@@ -70,6 +70,35 @@ Use two questions in order:
 
 When testing many circuits, seeds, or metrics, a few unusual results occur by chance. Record the complete candidate list and selection rule before running. Do not present only the most favorable outcome as though it were the planned primary result.
 
+## Hypothesis Testing for Quantum Benchmarks
+
+A hypothesis test turns an observed count into a structured claim. For a quantum circuit that should be balanced:
+
+- **Null hypothesis** $H_0$: the true probability of outcome 0 is $p_0=0.5$.
+- **Alternative hypothesis** $H_1$: the true probability differs from $0.5$.
+
+For $N$ shots producing $K$ zeros, the test statistic under $H_0$ is:
+
+$$
+z = \frac{\hat{p} - 0.5}{\operatorname{SE}(\hat{p})}, \qquad \operatorname{SE}(\hat{p}) = \sqrt{\frac{0.5 \times 0.5}{N}}
+$$
+
+If $|z|>1.96$ and $N$ is large enough, the outcome is statistically inconsistent with a balanced circuit at the 95 percent level. A significant result means only that the data is unlikely under $H_0$; it does not identify the cause, and it is not a severity rating.
+
+### Effect size matters more than significance in benchmarking
+
+A useful companion to a p-value is the **effect size**: the magnitude of the deviation irrespective of sample size. For a binary distribution, Cohen's h provides a scale-free measure. A simple practical substitute is the absolute deviation from the expected probability. Define both a significance criterion and a minimum practical deviation before running. A result that meets the significance criterion but not the practical deviation threshold should be labeled "statistically detectable, not operationally significant."
+
+### Worked example
+
+At 2048 shots, observing 1056 zeros gives $\hat{p}=0.516$. Under $H_0=0.5$:
+
+$$
+z = \frac{0.516-0.5}{\sqrt{0.25/2048}} \approx \frac{0.016}{0.011} \approx 1.45
+$$
+
+$|z|<1.96$, so this result is not statistically unusual. Even if it were, the deviation of 1.6 percentage points is likely well within any practical benchmark tolerance.
+
 ## Why this matters for evaluation
 Evaluation compares observed distributions against expected distributions. If expected is 50/50 and observed is far off, you investigate circuit design, noise, or execution settings.
 

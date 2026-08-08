@@ -72,6 +72,29 @@ Noise channels describe structured transformations, not merely random wrong answ
 
 Coherent errors, crosstalk, leakage outside the computational subspace, and calibration drift can produce patterns that simple independent-channel models miss. A noise model is most useful when it states what it deliberately does *not* model.
 
+## Kraus Operators: The Mechanism Behind a Noise Channel
+
+A unitary gate transforms a pure state precisely. A noisy operation instead transforms a **density matrix**, the more general object that describes both pure states and statistical mixtures. A set of Kraus operators $\{K_i\}$ describes one such operation:
+
+$$
+\rho \mapsto \sum_i K_i \rho K_i^\dagger
+$$
+
+The completeness condition $\sum_i K_i^\dagger K_i = I$ guarantees total probability is preserved. You do not need to compute Kraus operators during course exercises, but the picture gives useful intuition:
+
+| Channel | Number of Kraus operators | Physical meaning |
+|---|---|---|
+| Unitary gate | 1 | Perfect, deterministic transformation |
+| Bit flip with probability $p$ | 2 | Each shot is either unaffected or flipped |
+| Depolarizing with parameter $p$ | 4 | State is replaced by a random Pauli error with weight $p$ |
+| Amplitude damping | 2 | Energy loss toward ground state $|0\rangle$ |
+
+The key insight is that a noisy operation is a **statistical mixture of transformations**, one applied per physical shot. What you observe in counts is the average over many such outcomes. Diagnosing a noise channel from counts is therefore always partially underdetermined: different Kraus representations can produce the same observable distribution.
+
+### Process tomography and its cost
+
+Full **quantum process tomography** recovers all Kraus operators by preparing many input states, applying the channel, and measuring in many bases. The cost scales as $4^n$ experiments for $n$ qubits, which becomes impractical quickly. For this course, the practical alternative is to characterize a small number of diagnostic circuits that are sensitive to the suspected dominant error, measure the distribution shift, and use that as a bounded description of the noise environment.
+
 ## Degradation metrics
 
 | Metric | Definition | Interpretation |

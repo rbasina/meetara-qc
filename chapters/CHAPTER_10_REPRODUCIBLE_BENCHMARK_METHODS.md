@@ -83,6 +83,51 @@ Save these fields with every benchmark run:
 4. Start time, backend or simulator configuration, shots, and repeat index.
 5. Raw outputs before aggregation.
 
+## Publication-Grade Reproduction Workflow
+
+For a result to be trustworthy beyond a single session, every step that could vary must be recorded before anyone interprets the output.
+
+### Step 1: Write the protocol document
+Before running any code, produce a short protocol document containing: the research question, candidate configurations, primary and secondary metrics, success thresholds, shot count, repeat count, exclusion criteria, and the classical baseline definition.
+
+### Step 2: Capture the environment snapshot
+```python
+import sys, importlib.metadata, datetime, json, subprocess
+
+def capture_env(output_path="artifacts/env_snapshot.json"):
+    pkgs = {d.name: d.version for d in importlib.metadata.distributions()}
+    try:
+        rev = subprocess.check_output(["git", "rev-parse", "HEAD"],
+                                      text=True).strip()
+    except Exception:
+        rev = "unavailable"
+    snapshot = {
+        "timestamp_utc": datetime.datetime.utcnow().isoformat() + "Z",
+        "python": sys.version,
+        "git_revision": rev,
+        "packages": pkgs,
+    }
+    with open(output_path, "w") as f:
+        json.dump(snapshot, f, indent=2)
+    return snapshot
+```
+Save this before any circuit runs.
+
+### Step 3: Run trials and save raw counts
+Save one JSON or CSV row per (circuit, seed, repeat) before any aggregation. Never overwrite raw files with derived summaries.
+
+### Step 4: Fill the manifest
+Copy `projects/templates/benchmark_manifest.template.json` into the artifact folder, populate every field, and record the `git_revision` from the environment snapshot.
+
+### Step 5: Aggregate and decide
+Apply the protocol-defined metric, threshold, and decision rule to the raw rows. Do not adjust thresholds after viewing results.
+
+### Step 6: Reproduction test
+On a separate terminal with a freshly created virtual environment, install `requirements.txt` pinned to the captured versions, then re-execute the notebook or script from the recorded Git revision. Compare the new summary table against the original. Acceptable discrepancy is the predeclared tolerance.
+
+### Step 7: Append to the benchmark log
+Add one row to `projects/templates/benchmark_log.csv` summarizing the experiment ID, metric value, uncertainty, and decision. Link it to the manifest file path.
+
 ## Practical workflow
 1. Define benchmark protocol before execution.
 2. Run repeated trials with fixed settings.
