@@ -14,10 +14,8 @@ Read this chapter first, then open [Notebook 06](../notebooks/intermediate/noteb
 | Decoherence | State quality loss over time |
 | Degradation | Quality drop from ideal to noisy runs |
 
-## What You Should Remember in 30 Seconds
-1. Know the core terms before running experiments.
-2. Use repeated runs and clear thresholds for decisions.
-3. Report both quality and cost, not quality alone.
+## Evaluation Lens
+What structured error mechanism plausibly caused the quality loss, and does the circuit remain useful under that documented noise assumption?
 
 ## Visual Learning Map
 ```mermaid
@@ -57,6 +55,22 @@ Depolarizing-style noise tends to flatten a distribution toward uniform outcomes
 
 ### Noise models are hypotheses
 A simulator noise model is useful only when its assumptions are documented. It may use average gate and readout error rates, while a real device has qubit-specific errors, connectivity constraints, crosstalk, and calibration drift. Treat a noisy simulation as a sensitivity analysis, not a guarantee of hardware performance.
+
+## Coherence Times and Noise Channels
+
+$T_1$ is an energy-relaxation time: an excited qubit tends to decay from $|1\rangle$ toward $|0\rangle$. $T_2$ is a phase-coherence time: the relative phase between components becomes unreliable even when the population has not fully relaxed. In ordinary physical settings, $T_2$ cannot exceed $2T_1$.
+
+Noise channels describe structured transformations, not merely random wrong answers:
+
+| Channel | Signature | Simple diagnostic intuition |
+|---|---|---|
+| Bit flip | Exchanges 0 and 1 populations | Deterministic output appears on the opposite bit |
+| Phase flip | Changes relative phase | Immediate Z-basis counts can look unchanged; interference fails |
+| Depolarizing | Drives the state toward a mixed distribution | Distinct outcomes flatten toward uniform |
+| Amplitude damping | Relaxes toward $|0\rangle$ | Excess 0 outcomes, especially after delay or depth |
+| Readout error | Corrupts reported classical bits | Error is concentrated at measurement rather than circuit evolution |
+
+Coherent errors, crosstalk, leakage outside the computational subspace, and calibration drift can produce patterns that simple independent-channel models miss. A noise model is most useful when it states what it deliberately does *not* model.
 
 ## Degradation metrics
 
@@ -114,6 +128,12 @@ This avoids spending hardware credits on fragile candidates that already fail st
 1. Changing shots between ideal and noisy runs.
 2. Using one noisy run and calling it representative.
 3. Ignoring circuit depth when diagnosing degradation.
+
+## Failure Modes
+1. **Noise-as-randomness misconception:** different channels have different signatures and different mitigations.
+2. **Overfitted noise model:** tuning a model until it matches one result does not validate its predictions elsewhere.
+3. **Readout attribution error:** blaming gates for an error pattern caused primarily by measurement.
+4. **Drift blindness:** applying stale calibration assumptions to a later hardware run.
 
 ## Checkpoint
 1. Which metric best captures your circuit sensitivity to noise?

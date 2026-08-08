@@ -14,10 +14,8 @@ Read this chapter first, then move to [Notebook 01](../notebooks/beginner/notebo
 | Hybrid workflow | Classical pipeline with a quantum subroutine |
 | Benchmark | A structured test with measurable results |
 
-## What You Should Remember in 30 Seconds
-1. Know the core terms before running experiments.
-2. Use repeated runs and clear thresholds for decisions.
-3. Report both quality and cost, not quality alone.
+## Evaluation Lens
+Is the quantum component a justified fit for a clearly defined subproblem, when compared with a credible classical alternative under the same constraints?
 
 ## Visual Learning Map
 ```mermaid
@@ -45,6 +43,12 @@ A classical bit is stored as either 0 or 1. A qubit can be prepared in a state t
 Quantum advantage is therefore task-specific. A credible claim must state the task, input size, quality metric, classical baseline, resource budget, and whether the comparison used ideal simulation or real hardware.
 
 ## Classical computing vs quantum computing
+
+### Computing models are complements, not upgrades
+
+Do not picture computing progress as CPU to GPU to quantum processor. CPUs, GPUs, TPUs, FPGAs, and quantum processors have different execution models and strengths. GPUs and TPUs accelerate highly parallel numerical operations that dominate much of modern AI. FPGAs trade programming convenience for configurable low-latency pipelines. A quantum processor manipulates quantum states and is relevant only when a task maps to a useful quantum algorithm *and* survives the costs of data encoding, circuit execution, and measurement.
+
+The realistic near-term architecture is therefore hybrid: classical systems own data preparation, orchestration, optimization, and most production computation; a quantum subroutine is evaluated as a narrow experimental component.
 
 ### Conceptual and practical comparison
 
@@ -92,12 +96,12 @@ If any answer is no, treat the quantum idea as a research experiment rather than
 
 ## Practical examples: where quantum can assist AI workflows
 
-| AI workflow area | Classical challenge | Quantum-assisted pattern | Practical value | Real example |
+| AI workflow area | Classical challenge | Quantum-assisted pattern | Evidence level | Practical value |
 |---|---|---|---|---|
-| Combinatorial optimization | Routing, scheduling, and constrained assignment can be expensive | QAOA-style candidate generation with classical refinement | Better candidate sets for downstream solvers | Logistics and portfolio-style optimization pilots using quantum-inspired or hybrid solvers |
-| Kernel-based classification | Nonlinear feature interactions can be costly to represent | Quantum feature maps plus classical SVM evaluation | Alternative embedding geometry for specific datasets | Small-scale research demos on binary classification with quantum kernels |
-| Probabilistic sampling | Hard sampling steps in probabilistic models can bottleneck | Quantum circuits used for sampling subroutines | Potential exploration benefits in narrow settings | Toy Boltzmann-style and sampling studies in hybrid ML research |
-| Molecular feature generation for AI | High-fidelity chemistry simulation is expensive classically | VQE-like methods for molecular energy estimation feeding AI models | Better scientific descriptors for materials or drug models | Early-stage workflows in pharma and materials research ecosystems |
+| Combinatorial optimization | Routing, scheduling, and constrained assignment can be expensive | QAOA-style candidate generation with classical refinement | Active research and early pilots | Candidate sets for downstream solvers, not established general advantage |
+| Kernel-based classification | Nonlinear feature interactions can be costly to represent | Quantum feature maps plus classical SVM evaluation | Small-scale research evidence | Alternative embedding geometry for narrowly tested datasets |
+| Probabilistic sampling | Hard sampling steps in probabilistic models can bottleneck | Quantum circuits used for sampling subroutines | Theoretical and exploratory | Potential exploration benefits; practical scaling remains open |
+| Molecular feature generation for AI | High-fidelity chemistry simulation is expensive classically | VQE-like energy estimation feeding AI models | Active research | Scientific descriptors for materials or drug models under strict error control |
 
 Note: Every claimed gain must be tested against tuned classical baselines under the same budget and quality constraints.
 
@@ -120,6 +124,12 @@ Bottom line:
 2. Quantum hardware today has noise, limited qubits, and execution constraints.
 3. Short-term wins are expected in narrow hybrid workloads, not full model training replacement.
 4. Evaluation discipline is essential: utility claims must be reproducible and compared to tuned classical baselines.
+
+## Failure Modes
+1. **Accelerator substitution myth:** assuming quantum hardware replaces GPUs or TPUs for general AI workloads.
+2. **Evidence-level inflation:** presenting an exploratory or theoretical result as an established practical capability.
+3. **Isolated-subroutine fallacy:** ignoring data loading, orchestration, and post-processing when estimating end-to-end value.
+4. **Weak-baseline comparison:** claiming improvement without a tuned classical method under the same quality and budget constraints.
 
 ## Suggested practical exercises for this foundation chapter
 1. Reading exercise:

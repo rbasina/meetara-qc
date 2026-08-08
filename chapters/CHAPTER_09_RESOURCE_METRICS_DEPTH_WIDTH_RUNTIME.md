@@ -14,10 +14,8 @@ Read this chapter first, then open [Notebook 09](../notebooks/advanced/notebook-
 | Runtime | Execution duration |
 | Efficiency | Quality achieved per unit cost |
 
-## What You Should Remember in 30 Seconds
-1. Know the core terms before running experiments.
-2. Use repeated runs and clear thresholds for decisions.
-3. Report both quality and cost, not quality alone.
+## Evaluation Lens
+After meeting the required quality floor, which circuit provides the most useful result for its depth, width, shots, and time budget?
 
 ## Visual Learning Map
 ```mermaid
@@ -44,6 +42,8 @@ Professional benchmarking always reports quality and cost together. High quality
 |---|---|---|
 | Depth | Sequential operation length | Higher depth often increases noise impact |
 | Width | Number of qubits used | Affects feasibility on target hardware |
+| One-qubit gates | Local rotations and basis changes | Contribute time and calibration exposure |
+| Two-qubit gates | Entangling operations such as CX | Often dominate device error and routing cost |
 | Shots | Repetitions for probability estimates | Controls confidence and cost |
 | Runtime | Execution time | Important for throughput and scaling |
 
@@ -62,6 +62,10 @@ Depth is a count of sequential operation layers after a specified circuit decomp
 
 Runtime must be decomposed before comparison. Record at least compilation or transpilation time, queue time when applicable, quantum execution time, and classical post-processing time. Queue time affects user experience and cost planning, while execution time is the more relevant quantity for scaling a circuit itself.
 
+### Gate count is not critical path
+
+Two circuits can use the same number of gates while having different depths. Gates acting on separate qubits can run in parallel, while gates that share a qubit form a sequential **critical path**. Depth approximates that sequential dependency, but it must be interpreted after transpilation to the target backend. Record both gate counts and depth: counts expose error opportunities; depth exposes elapsed coherent time and parallelism.
+
 ### Avoid misleading ratio scores
 Ratios such as $Q/T$ are useful for ranking candidates only when $Q$ has the same scale and meaning for every candidate. They can hide unacceptable absolute quality: a very fast but low-quality circuit may have a high ratio. Use a two-stage decision rule: first require minimum acceptable quality, then compare quality-per-cost among candidates that pass.
 
@@ -74,11 +78,11 @@ Ratios such as $Q/T$ are useful for ranking candidates only when $Q$ has the sam
 
 ## Reporting template
 
-| Candidate | Depth | Width | Shots | Runtime (s) | Quality score | Quality/second | Decision |
-|---|---:|---:|---:|---:|---:|---:|---|
-| A | ... | ... | ... | ... | ... | ... | ... |
-| B | ... | ... | ... | ... | ... | ... | ... |
-| C | ... | ... | ... | ... | ... | ... | ... |
+| Candidate | Depth | Width | 1Q gates | 2Q gates | Shots | Runtime (s) | Quality score | Decision |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| A | ... | ... | ... | ... | ... | ... | ... | ... |
+| B | ... | ... | ... | ... | ... | ... | ... | ... |
+| C | ... | ... | ... | ... | ... | ... | ... | ... |
 
 ## Evaluation policy
 1. Report quality with resource cost together.
@@ -104,6 +108,12 @@ This is common when SLA or batch throughput matters more than marginal objective
 1. Comparing circuits with different quality metrics.
 2. Ignoring shot-cost in repeated experiments.
 3. Reporting runtime without backend details.
+
+## Failure Modes
+1. **Depth-only ranking:** treating equal depth as equal hardware risk despite very different two-qubit gate counts.
+2. **Ratio masking:** selecting a high quality-per-second score that fails the minimum absolute-quality requirement.
+3. **Runtime aggregation:** combining queue, compile, execution, and post-processing time without preserving their meanings.
+4. **Untranspiled accounting:** reporting logical resources when physical routing substantially changed the circuit.
 
 ## Checkpoint
 1. Which resource metric is your current bottleneck?

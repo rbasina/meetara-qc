@@ -14,10 +14,8 @@ Read this chapter first, then open [Notebook 10](../notebooks/advanced/notebook-
 | Artifact | Saved file proving experiment details |
 | Drift | Unexpected change across reruns |
 
-## What You Should Remember in 30 Seconds
-1. Know the core terms before running experiments.
-2. Use repeated runs and clear thresholds for decisions.
-3. Report both quality and cost, not quality alone.
+## Evaluation Lens
+Can an independent learner reconstruct the protocol, rerun it, and reach the same decision within a declared tolerance?
 
 ## Visual Learning Map
 ```mermaid
@@ -56,6 +54,12 @@ Reproducibility is the difference between a demo and evidence.
 | Summary table | `artifacts/summary_metrics.csv` |
 | Notebook or script | `notebooks/...` or `scripts/...` |
 | Environment snapshot | `requirements.txt` and Python version note |
+
+Use the repository [manifest template](../projects/templates/benchmark_manifest.template.json) for every serious run and append one summary row to the cumulative [benchmark log](../projects/templates/benchmark_log.csv). Copy these templates into your experiment artifact folder before filling them out; do not overwrite the repository examples.
+
+### Required manifest fields
+
+A publication-quality manifest must identify the source revision, Python and package versions, backend and calibration context, circuit hash or source path, transpiler configuration, shots, repeats, seeds, noise model, metrics, thresholds, decision rule, and artifact paths. These fields allow another person to distinguish a changed protocol from normal stochastic variation.
 
 ## Protocol-first rule
 Define this before execution:
@@ -105,6 +109,12 @@ In practice, teams often reject strong claims that cannot be rerun in a clean en
 1. Saving only charts and not raw data.
 2. Omitting shot counts or random seed details.
 3. Mixing results from changed protocols in one summary.
+
+## Failure Modes
+1. **Source ambiguity:** a notebook file without a Git commit or source revision cannot identify the code that generated a result.
+2. **Configuration drift:** changed transpiler options, backend calibration, or package versions can invalidate a direct comparison.
+3. **Artifact-only reporting:** a chart without raw counts and a manifest cannot be independently audited.
+4. **Log inconsistency:** a benchmark-log row must point to the raw artifacts and manifest that support its decision.
 
 ## Checkpoint
 1. Which artifact is most likely to be missing in beginner reports?

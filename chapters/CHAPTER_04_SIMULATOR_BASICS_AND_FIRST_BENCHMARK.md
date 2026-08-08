@@ -14,10 +14,8 @@ Read this chapter first, then open [Notebook 04](../notebooks/beginner/notebook-
 | Threshold | Rule for pass or investigate |
 | Decision | Evaluation outcome based on metrics |
 
-## What You Should Remember in 30 Seconds
-1. Know the core terms before running experiments.
-2. Use repeated runs and clear thresholds for decisions.
-3. Report both quality and cost, not quality alone.
+## Evaluation Lens
+Was the benchmark protocol specified before execution, and is the observed distribution within a defensible tolerance of the ideal reference?
 
 ## Visual Learning Map
 ```mermaid
@@ -65,6 +63,17 @@ For each circuit, record:
 
 Use these as starter thresholds for simulator-first labs.
 
+## Derive a Threshold Instead of Borrowing One
+
+An ideal simulator has no physical gate or readout error, but a finite-shot experiment still varies. For a deterministic circuit with true success probability $p=1$, every sampled result should be correct in an ideal simulator; an unexpected outcome usually indicates a circuit, mapping, or analysis defect. For the H-gate circuit, the expected probability is $p=0.5$, so variation is expected.
+
+At $N=1024$ shots, the approximate standard error for an ideal balanced circuit is $0.5/\sqrt{1024}\approx0.016$. A balance difference of $0.10$ is therefore much larger than ordinary sampling variation and is a useful investigation trigger. It is not a universal law. Choose a threshold from:
+1. the expected distribution and shot count;
+2. the tolerated practical error for the task; and
+3. the cost of a false pass versus a false investigation.
+
+Record this reasoning beside the threshold. That turns a benchmark from a copied rule into an auditable decision.
+
 ## Practical benchmark script
 ```python
 from qiskit import QuantumCircuit
@@ -111,6 +120,12 @@ This mirrors early-stage benchmark practice in cloud quantum projects, where tea
 1. Run each circuit 5 times and report mean plus worst-case deviation.
 2. Identify which benchmark result is most sensitive to shot count.
 3. State one change that improves rigor without increasing cost too much.
+
+## Failure Modes
+1. **Post-hoc thresholding:** selecting a tolerance after seeing the counts biases the decision.
+2. **Reference mismatch:** comparing a circuit against an expected distribution for a different bit order or measurement basis.
+3. **False hardware inference:** treating an ideal-simulator pass as evidence of hardware readiness.
+4. **Unexplained deterministic failure:** accepting a nonzero error rate for an ideal deterministic circuit without debugging its implementation.
 
 ## Next step
 Move to Chapter 05 for fidelity and error metrics.

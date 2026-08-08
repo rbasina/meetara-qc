@@ -14,10 +14,8 @@ Read this chapter first, then open [Notebook 07](../notebooks/intermediate/noteb
 | Stability | Consistency across repeats or seeds |
 | Quality per cost | Performance normalized by resource use |
 
-## What You Should Remember in 30 Seconds
-1. Know the core terms before running experiments.
-2. Use repeated runs and clear thresholds for decisions.
-3. Report both quality and cost, not quality alone.
+## Evaluation Lens
+Which algorithm configuration achieves acceptable task quality most reliably within a shared evaluation and resource budget?
 
 ## Visual Learning Map
 ```mermaid
@@ -52,6 +50,21 @@ Variational algorithms use a classical optimizer around a parameterized quantum 
 
 ### Fair algorithm comparison
 Compare candidate configurations under a shared budget: same task instance, shots per objective estimate, maximum optimizer evaluations, stopping condition, and classical baseline effort. Otherwise, a better score might simply be the result of spending more evaluations.
+
+## Part A: Grover as a Controlled Amplification Experiment
+
+The oracle does not reveal a solution directly. It marks a target by applying a phase change, and the diffusion operator converts that relative phase into a larger target amplitude. For one marked state out of $N$, the best iteration count is approximately $\lfloor \pi\sqrt{N}/4 \rfloor$. The approximation is a guide, not a substitute for a sweep in a small or noisy implementation.
+
+Benchmark target success probability against iteration count. The expected curve rises, peaks, then falls because amplitude amplification rotates the state vector. This **over-rotation** is a useful negative result: more Grover iterations can make the answer worse.
+
+## Part B: Variational Algorithms as Noisy Optimization
+
+A parameterized circuit defines a family of states. The classical optimizer selects parameter values, while finite shots produce noisy objective estimates. Separate three questions in the report:
+1. Did the objective improve from its initialized value?
+2. Did it improve reliably across seeds?
+3. Did the improvement justify the evaluations, circuit depth, and shot budget?
+
+Plot final objective versus seed and, where useful, objective versus evaluation count. A smooth-looking best-run curve cannot establish optimizer reliability by itself.
 
 ## Grover-style evaluation workflow
 1. Define marked target state and success probability metric.
@@ -97,6 +110,12 @@ In many cases, the most stable configuration wins over the best single-run score
 1. Reporting only final best score.
 2. Ignoring initialization sensitivity in variational methods.
 3. Comparing configurations with unequal compute budgets.
+
+## Failure Modes
+1. **Grover over-rotation:** extra iterations reduce target probability after the optimum.
+2. **Oracle mismatch:** evaluating amplification for a different marked state than the one the oracle encodes.
+3. **Seed selection bias:** choosing a variational initialization only because it produced one strong run.
+4. **Budget leakage:** allowing one candidate more objective evaluations or shots than another.
 
 ## Checkpoint
 1. What is your algorithm success metric?

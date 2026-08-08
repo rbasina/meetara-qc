@@ -14,10 +14,8 @@ Read this chapter first, then open [Notebook 12](../notebooks/advanced/notebook-
 | Limitation | Known boundary of your claim |
 | Executive summary | Short result and decision overview |
 
-## What You Should Remember in 30 Seconds
-1. Know the core terms before running experiments.
-2. Use repeated runs and clear thresholds for decisions.
-3. Report both quality and cost, not quality alone.
+## Evaluation Lens
+Does the complete evidence package support the stated claim, including its limitations, negative findings, and comparison baseline?
 
 ## Visual Learning Map
 ```mermaid
@@ -60,6 +58,25 @@ Write the problem instance, candidate configurations, primary metric, secondary 
 | Results | Quality, resource cost, and significance evidence |
 | Discussion | Tradeoffs, limitations, and failure analysis |
 | Reproducibility | Environment, scripts, and artifact index |
+
+## Required Research-Style Report
+
+Submit the report in this order so a reviewer can trace every conclusion back to the method and raw evidence:
+
+1. Executive summary and bounded claim.
+2. Research question and hypothesis.
+3. Problem definition and task instance.
+4. Classical and quantum baselines.
+5. Experimental protocol and configuration manifest.
+6. Metrics, uncertainty method, and decision thresholds.
+7. Results and resource analysis.
+8. Negative result and failure analysis.
+9. Reproducibility artifact index.
+10. Limitations and conclusion.
+
+### A negative result is required
+
+Include at least one planned configuration that did not meet its predeclared success rule, then explain the likely reason using evidence. Examples include a circuit that exceeded a TVD threshold, a variational configuration that was seed-sensitive, or a transpiled circuit whose resource overhead made it impractical. This requirement prevents a capstone from becoming a search for one favorable chart.
 
 ## Step-by-step capstone flow
 1. Select one practical task with measurable success criteria.
@@ -119,5 +136,5 @@ Well-documented negative findings are often more useful than unverified positive
 1. Final report markdown file
 2. Notebook and script artifacts
 3. Raw and processed metric files
-4. Environment and run configuration files
+4. Completed [benchmark manifest](../projects/templates/benchmark_manifest.template.json) and cumulative [benchmark log](../projects/templates/benchmark_log.csv)
 5. One-page executive summary

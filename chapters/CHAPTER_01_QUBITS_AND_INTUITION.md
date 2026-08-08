@@ -14,10 +14,8 @@ Read this chapter first, then open [Notebook 01](../notebooks/beginner/notebook-
 | Measurement | Process that returns classical output |
 | Shots | Number of repeated runs |
 
-## What You Should Remember in 30 Seconds
-1. Know the core terms before running experiments.
-2. Use repeated runs and clear thresholds for decisions.
-3. Report both quality and cost, not quality alone.
+## Evaluation Lens
+Is the measured distribution consistent with the state the circuit was intended to prepare, after accounting for finite-shot variation?
 
 ## Visual Learning Map
 ```mermaid
@@ -33,11 +31,29 @@ flowchart LR
 ## 1-minute overview
 A qubit is the basic unit of quantum information. Unlike a classical bit that is either 0 or 1, a qubit can be in a superposition of both states.
 
-## Core concepts
-1. Basis states: $|0\rangle$ and $|1\rangle$
-2. State vector form: $|\psi\rangle=\alpha|0\rangle+\beta|1\rangle$
-3. Probability rule: $|\alpha|^2+|\beta|^2=1$
-4. Measurement collapses superposition to one basis state
+## Build the Qubit Model Step by Step
+
+A classical bit has two allowed values. A qubit also has two standard measurement outcomes, called the **computational basis** states $|0\rangle$ and $|1\rangle$. Before measurement, however, a qubit is described by a state vector:
+
+$$
+|\psi\rangle=\alpha|0\rangle+\beta|1\rangle
+$$
+
+The coefficients $\alpha$ and $\beta$ are complex amplitudes. They obey the normalization rule:
+
+$$
+|\alpha|^2+|\beta|^2=1
+$$
+
+This rule ensures that the total probability of all possible measurement outcomes is one. A useful beginner habit is to separate three ideas:
+
+| Object | Meaning | Example |
+|---|---|---|
+| Basis state | A state named by one measurement outcome | $|0\rangle$ or $|1\rangle$ |
+| Amplitude | Complex coefficient used to calculate probability | $\alpha=1/\sqrt{2}$ |
+| Probability | Squared amplitude magnitude | $P(0)=|\alpha|^2$ |
+
+The state $|0\rangle$ has amplitudes $(1,0)$ and always produces 0 in the computational basis. The state $|1\rangle$ has amplitudes $(0,1)$ and always produces 1. The equal-superposition state has amplitudes $(1/\sqrt{2},1/\sqrt{2})$, which produces each outcome with probability $1/2$.
 
 ## From Amplitudes to Outcomes
 The symbols $\alpha$ and $\beta$ are amplitudes, not probabilities. An amplitude can be negative or complex, so it cannot be read directly as a chance. The probability of measuring 0 is $|\alpha|^2$ and the probability of measuring 1 is $|\beta|^2$.
@@ -52,6 +68,62 @@ Both amplitudes have magnitude $1/\sqrt{2}$, so each measurement outcome has pro
 
 ### Why phase is deferred, not irrelevant
 States such as $(|0\rangle+|1\rangle)/\sqrt{2}$ and $(|0\rangle-|1\rangle)/\sqrt{2}$ produce the same 50/50 result when measured immediately. They are nevertheless different states because later gates can make their phase difference visible through interference. Chapter 02 introduces the gates that create and use this effect.
+
+## The Bloch Sphere: One Picture for Every Pure Qubit
+
+Ignoring global phase, every single-qubit pure state can be written as:
+
+$$
+|\psi\rangle=\cos\left(\frac{\theta}{2}\right)|0\rangle+e^{i\phi}\sin\left(\frac{\theta}{2}\right)|1\rangle
+$$
+
+The Bloch sphere represents this state as a point on a unit sphere. The angle $\theta$ controls the relative amount of $|0\rangle$ and $|1\rangle$; the angle $\phi$ controls their relative phase. You do not need to calculate these angles for every exercise, but the picture gives the right intuition.
+
+| Bloch-sphere location | State | Meaning in a computational-basis measurement |
+|---|---|---|
+| North pole | $|0\rangle$ | Always 0 |
+| South pole | $|1\rangle$ | Always 1 |
+| Positive x-axis | $|+\rangle=(|0\rangle+|1\rangle)/\sqrt{2}$ | 50/50 |
+| Negative x-axis | $|-\rangle=(|0\rangle-|1\rangle)/\sqrt{2}$ | 50/50 |
+
+The last two rows are the key lesson: position around the equator represents phase information that a direct computational-basis measurement cannot reveal.
+
+### Global phase versus relative phase
+
+Multiplying an entire state by the same complex factor does not change any measurement probability. For example, $|+\rangle$ and $- |+\rangle$ describe the same physical state; this is a **global phase**. In contrast, changing only one component changes the relative phase: $|+\rangle$ becomes $|-\rangle$. Relative phase can alter interference after later gates, so it is physically observable.
+
+## Measurement Depends on the Chosen Basis
+
+Measuring in the computational, or Z, basis distinguishes $|0\rangle$ from $|1\rangle$. It cannot distinguish $|+\rangle$ from $|-\rangle$ in one shot because both yield 0 and 1 with equal probability. Applying an H gate before a standard measurement changes the effective measurement basis to the X basis:
+
+$$
+H|+\rangle=|0\rangle,\qquad H|-\rangle=|1\rangle
+$$
+
+This is not a trick. The circuit asks a different question of the same state. A measurement result is meaningful only alongside the basis in which it was measured.
+
+## Interference Experiment: States That Initially Look the Same
+
+The following two circuits produce the same 50/50 distribution if measured immediately after their first H gate. Add a second H gate, however, and their relative phase becomes visible.
+
+```python
+from qiskit import QuantumCircuit
+from qiskit_aer import AerSimulator
+
+def counts_for(relative_phase):
+	qc = QuantumCircuit(1, 1)
+	qc.h(0)
+	if relative_phase:
+		qc.z(0)      # changes |+> into |->
+	qc.h(0)          # measures in the X basis
+	qc.measure(0, 0)
+	return AerSimulator().run(qc, shots=1024).result().get_counts()
+
+print("plus state:", counts_for(relative_phase=False))
+print("minus state:", counts_for(relative_phase=True))
+```
+
+Expected result: the first circuit produces 0 and the second produces 1, apart from any intentionally introduced noise. This is interference: amplitudes combine before probabilities are calculated.
 
 
 ## Why this matters for evaluation
@@ -102,6 +174,12 @@ In quantum random number generation workflows, balanced outcome behavior is a fi
 2. Confusing amplitude with probability.
 3. Ignoring shot count when interpreting results.
 4. Making claims without documenting thresholds and repeat count.
+
+## Failure Modes
+1. **Wrong measurement basis:** a 50/50 result can be correct in the Z basis while hiding a meaningful phase difference.
+2. **Invalid state preparation:** amplitudes that do not satisfy $|\alpha|^2+|\beta|^2=1$ cannot represent a valid isolated qubit state.
+3. **Global-phase confusion:** treating $|\psi\rangle$ and $e^{i\gamma}|\psi\rangle$ as different physical states leads to false distinctions.
+4. **Interpreting counts as the full state:** counts from one basis do not reveal relative phase or prove that a state is correct for later interference.
 
 ## Next chapter
 Gates and circuits: how we control qubit states deliberately.

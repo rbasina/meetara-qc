@@ -14,10 +14,8 @@ Read this chapter first, then open [Notebook 03](../notebooks/beginner/notebook-
 | Confidence | How reliable the estimated probability is |
 | Repeat | One additional run of the same setup |
 
-## What You Should Remember in 30 Seconds
-1. Know the core terms before running experiments.
-2. Use repeated runs and clear thresholds for decisions.
-3. Report both quality and cost, not quality alone.
+## Evaluation Lens
+Is an observed difference large enough to matter practically, rather than merely a fluctuation from a finite number of shots?
 
 ## Visual Learning Map
 ```mermaid
@@ -49,6 +47,28 @@ At the hardest-to-estimate point, $p=0.5$, the standard error is about $0.5/\sqr
 
 ### Confidence intervals and repeated runs answer different questions
 A confidence interval describes uncertainty from finite sampling within one controlled run. Repeated runs also expose variation caused by changing random seeds, simulator settings, calibration drift, or hardware conditions. For a serious claim, report both the shot count and the repeat policy.
+
+## The Binomial Model Behind a Count Histogram
+
+For a binary measurement such as a balanced H-gate circuit, the number of observed ones $K$ follows a binomial model when shots are independent and the underlying probability is stable:
+
+$$
+K \sim \operatorname{Binomial}(N,p)
+$$
+
+The estimate is $\hat p=K/N$. A normal-approximation 95 percent interval is $\hat p \pm 1.96\operatorname{SE}(\hat p)$ when $N$ is reasonably large and the outcome is not extremely rare. For small samples or probabilities near zero or one, prefer a Wilson interval because it behaves more reliably near the boundary. The point is not to memorize one formula: report an uncertainty method appropriate to the experiment.
+
+### Statistical difference is not automatically practical difference
+
+With a very large number of shots, a tiny difference such as $0.500$ versus $0.508$ can become statistically detectable. That does not necessarily justify an engineering action. Define a **practical tolerance** before the experiment. For an intended balanced distribution, a team might decide that TVD below $0.02$ is operationally acceptable even when it can estimate a nonzero deviation precisely.
+
+Use two questions in order:
+1. Is the observed change unlikely under the reference model, given sampling uncertainty?
+2. Is the size of that change large enough to affect the task, threshold, or downstream decision?
+
+### Multiple comparisons need discipline
+
+When testing many circuits, seeds, or metrics, a few unusual results occur by chance. Record the complete candidate list and selection rule before running. Do not present only the most favorable outcome as though it were the planned primary result.
 
 ## Why this matters for evaluation
 Evaluation compares observed distributions against expected distributions. If expected is 50/50 and observed is far off, you investigate circuit design, noise, or execution settings.
@@ -99,3 +119,9 @@ Run the same circuit 5 times with shots=256 and record variation in counts.
 1. Compare variation at 256, 1024, and 2048 shots.
 2. Report which shot setting gives best confidence-to-cost tradeoff.
 3. State one decision you would make differently after seeing repeated-run variance.
+
+## Failure Modes
+1. **Too few shots:** a wide interval cannot support a narrow performance claim.
+2. **Treating a confidence interval as repeatability:** it describes finite-shot uncertainty, not calibration drift or seed sensitivity.
+3. **Practical-significance error:** acting on a tiny effect that does not cross a predefined decision threshold.
+4. **Cherry-picking repeats:** reporting only the run closest to the expected distribution hides experiment variability.

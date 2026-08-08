@@ -1,0 +1,2 @@
+chapter,experiment_id,task,candidate,reference,primary_metric,metric_value,uncertainty,shots,repeats,depth,width,two_qubit_gates,runtime_seconds,backend_or_simulator,decision,notes
+01,chapter-01-h-superposition,State preparation,H plus measurement,Ideal 50-50 distribution,TVD,,,,,,,,,,,pass or investigate,

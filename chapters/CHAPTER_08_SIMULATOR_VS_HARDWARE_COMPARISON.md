@@ -14,10 +14,8 @@ Read this chapter first, then open [Notebook 08](../notebooks/intermediate/noteb
 | Control variable | Setting kept identical for fairness |
 | Decision consistency | How often pass/fail decision is stable |
 
-## What You Should Remember in 30 Seconds
-1. Know the core terms before running experiments.
-2. Use repeated runs and clear thresholds for decisions.
-3. Report both quality and cost, not quality alone.
+## Evaluation Lens
+When protocol and metrics are held constant, how does device behavior differ from the simulator model, and is that difference operationally important?
 
 ## Visual Learning Map
 ```mermaid
@@ -59,6 +57,21 @@ A low simulator-hardware delta does not establish a quantum speedup. Likewise, a
 ### Hardware context belongs in the record
 For each hardware run, record backend name, calibration timestamp if available, qubit layout or transpilation settings, measurement mitigation status, and run time. Device calibration changes can explain differences between otherwise identical trials.
 
+## From Logical Circuit to Physical Circuit
+
+The circuit you write is logical: it names abstract qubits and general gates. A hardware backend has physical qubits, a limited coupling map, and a native basis-gate set. **Transpilation** rewrites the logical circuit for those constraints. It can decompose gates, choose physical qubits, reorder operations, and insert SWAP gates when two qubits that must interact are not connected.
+
+For every simulator-versus-hardware comparison, capture the before-and-after resource record:
+
+| Property | Logical circuit | Transpiled physical circuit |
+|---|---|---|
+| Depth | Before backend compilation | After routing and decomposition |
+| Two-qubit gate count | Algorithm-level requirement | Includes routing overhead |
+| Qubit layout | Abstract labels | Selected physical qubits |
+| Basis gates | Gate model used in source | Backend-supported operations |
+
+An increase in depth or two-qubit gates is not necessarily a bug; it is a cost of mapping the logical task to real connectivity. It does mean a direct comparison must state the transpiler settings and layout. Measurement mitigation and dynamical decoupling are additional protocol choices, not invisible defaults: report whether they were used and apply them consistently.
+
 ## Recommended experiment protocol
 1. Freeze one circuit and one parameter set.
 2. Define thresholds before execution.
@@ -95,6 +108,12 @@ This process reduces wasted credits and improves the reliability of final benchm
 1. Comparing different shot counts across simulator and hardware.
 2. Using a single hardware run as final proof.
 3. Ignoring queue time and calibration context in runtime interpretation.
+
+## Failure Modes
+1. **Unequal compilation:** comparing an optimized physical circuit with an untranspiled simulator circuit obscures the source of the delta.
+2. **Layout drift:** different physical-qubit choices can change error exposure between runs.
+3. **Queue-time confusion:** queue delay affects workflow latency but is not circuit execution time.
+4. **Unreported mitigation:** applying error mitigation only to one condition invalidates a fair comparison.
 
 ## Checkpoint
 1. Which results are expected to diverge the most and why?

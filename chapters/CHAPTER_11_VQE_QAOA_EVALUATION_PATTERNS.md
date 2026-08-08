@@ -14,10 +14,8 @@ Read this chapter first, then open [Notebook 11](../notebooks/advanced/notebook-
 | Seed sensitivity | Dependence on initialization |
 | Robustness | Performance under noise and repeats |
 
-## What You Should Remember in 30 Seconds
-1. Know the core terms before running experiments.
-2. Use repeated runs and clear thresholds for decisions.
-3. Report both quality and cost, not quality alone.
+## Evaluation Lens
+Does the hybrid optimizer improve the actual objective consistently across seeds and noise, rather than exploiting a favorable stochastic run?
 
 ## Visual Learning Map
 ```mermaid
@@ -56,6 +54,22 @@ A classical baseline should receive comparable tuning attention. State the solve
 
 ### Uncertainty from shots and seeds
 Use multiple optimizer seeds and, where practical, multiple shot-seed or measurement-repeat settings. Summarize median, mean, spread, success rate, and worst-case outcome. The median is useful when rare optimizer failures make the mean unstable.
+
+## Algorithm Mechanics: What Is Being Optimized?
+
+VQE minimizes the expectation value of a Hamiltonian $H$ using a parameterized ansatz $|\psi(\theta)\rangle$:
+
+$$
+E(\theta)=\langle\psi(\theta)|H|\psi(\theta)\rangle
+$$
+
+The optimizer does not receive the exact $E(\theta)$ on hardware; it receives a finite-shot estimate assembled from measurements. The ansatz controls which states are reachable, while the optimizer controls which parameters are tried. A low final estimate is meaningful only when it is compared with a reference energy, uncertainty, and equivalent-budget baseline.
+
+QAOA alternates a problem-specific cost operator with a mixer operator. Its parameters commonly appear as $\gamma$ and $\beta$, and layer count $p$ trades expressiveness against depth and optimization difficulty. For a maximization problem with known optimum $C^*$, report an approximation ratio such as $C/C^*$, not only a raw score whose scale changes with the problem instance.
+
+### Optimizer failure modes are experimental outcomes
+
+COBYLA, SPSA, and Nelder-Mead make different tradeoffs in noisy settings. Compare them only with the same maximum objective evaluations, shot policy, stopping rule, and initialization policy. Record runs that exhaust their budget, converge prematurely, or fail numerically. These are reliability findings, not rows to discard.
 
 ## Practical evaluation workflow
 1. Choose one VQE-style or QAOA-style objective.
@@ -112,6 +126,12 @@ Teams usually reject configurations that only succeed under narrow initializatio
 1. Publishing only the single best run.
 2. Ignoring failed runs in averages.
 3. Comparing configurations with different budget limits.
+
+## Failure Modes
+1. **Seed dependence:** a favorable initialization can look like an algorithmic improvement.
+2. **Shot-noise chasing:** the optimizer may react to estimator noise rather than a real objective change.
+3. **Barren or flat regions:** gradients or score differences may become too small to guide useful updates.
+4. **Unfair classical baseline:** an untuned classical solver does not establish a meaningful quantum comparison.
 
 ## Checkpoint
 1. Which axis is most important for your target use case?

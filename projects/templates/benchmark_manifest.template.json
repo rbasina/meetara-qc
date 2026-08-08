@@ -1,0 +1,43 @@
+{
+  "experiment_id": "replace-with-unique-id",
+  "timestamp_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "source_revision": "git commit hash or source version",
+  "python_version": "3.x",
+  "package_versions": {
+    "qiskit": "x.y.z",
+    "qiskit_aer": "x.y.z"
+  },
+  "backend": {
+    "name": "AerSimulator or hardware backend name",
+    "version": "if available",
+    "calibration_timestamp_utc": "if applicable"
+  },
+  "circuit": {
+    "source": "notebook or script path",
+    "hash": "stable circuit-definition hash",
+    "logical_qubits": 0,
+    "transpiler_settings": {
+      "optimization_level": 0,
+      "basis_gates": [],
+      "initial_layout": []
+    }
+  },
+  "execution": {
+    "shots": 1024,
+    "repeats": 5,
+    "random_seeds": [],
+    "noise_model": "ideal, named model, or null"
+  },
+  "evaluation": {
+    "metrics": ["TVD"],
+    "thresholds": {
+      "TVD_max": 0.1
+    },
+    "decision_rule": "Pass when all predeclared conditions are met."
+  },
+  "artifacts": {
+    "raw_counts": "path/to/raw_counts.csv",
+    "summary_metrics": "path/to/summary_metrics.csv",
+    "benchmark_log": "path/to/benchmark_log.csv"
+  }
+}

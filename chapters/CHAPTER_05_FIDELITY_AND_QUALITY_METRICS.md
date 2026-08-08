@@ -14,10 +14,8 @@ Read this chapter first, then open [Notebook 05](../notebooks/intermediate/noteb
 | Overlap | Shared probability mass between distributions |
 | Quality score | Numeric indicator of result quality |
 
-## What You Should Remember in 30 Seconds
-1. Know the core terms before running experiments.
-2. Use repeated runs and clear thresholds for decisions.
-3. Report both quality and cost, not quality alone.
+## Evaluation Lens
+Which metric captures the error relevant to this task, and how much of its observed value may be explained by sampling uncertainty?
 
 ## Visual Learning Map
 ```mermaid
@@ -70,6 +68,21 @@ $$
 $$
 
 The distribution-overlap score is close to 1, so this is likely acceptable for a simulator sanity check. The correct judgment still depends on the predeclared threshold, shot count, and repeat-to-repeat spread.
+
+## Select a Metric for the Decision You Need to Make
+
+No one metric is best in every context. Use the observable you actually have and the decision you need to support:
+
+| Evaluation question | Primary metric | Important caveat |
+|---|---|---|
+| Are two count distributions close? | TVD | Does not observe relative phase |
+| Do distributions differ symmetrically? | Jensen-Shannon distance | Requires a declared handling policy for zero-probability bins |
+| Are distributions similar under square-root geometry? | Hellinger distance | Less immediately interpretable than TVD for many beginners |
+| Does a simulated state match a target state? | State fidelity | Counts in one basis are insufficient |
+| Did an optimizer solve the task? | Objective or approximation ratio | Must include a baseline and uncertainty |
+| Did a target state occur often enough? | Success probability with confidence interval | A high point estimate can still have wide uncertainty |
+
+KL divergence is useful when a reference distribution is treated as a model, but it is asymmetric and can become undefined when $q_i=0$ while $p_i>0$. Jensen-Shannon distance is a bounded symmetric alternative constructed from KL divergence. Add a small, documented smoothing constant only when the task justifies it; never silently alter observed counts.
 
 ## Suggested benchmark policy
 
@@ -128,6 +141,12 @@ In practice, teams reject parameter settings that produce unstable quality metri
 1. Defining thresholds after seeing the result.
 2. Comparing runs with different shot counts as if they are equivalent.
 3. Reporting only best-case runs and hiding variability.
+
+## Failure Modes
+1. **Metric mismatch:** using count similarity when phase-sensitive state correctness is the real requirement.
+2. **Zero-bin instability:** treating a KL-based score as finite without documenting how zero counts were handled.
+3. **Single-score overclaim:** allowing a favorable metric to hide a failed task-specific quality or resource constraint.
+4. **Uncertainty omission:** interpreting a small metric delta without checking whether finite shots could explain it.
 
 ## Checkpoint
 1. Why is threshold definition required before running experiments?
