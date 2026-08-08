@@ -104,20 +104,34 @@ These are instructional starting points, not universal hardware standards. A thr
 
 ## Practical code example (counts to quality)
 
+**What each function does:**
+- `normalize_counts` — converts raw integer counts into probabilities by dividing each count by the total shots. Output is a dict like `{'0': 0.506, '1': 0.494}`.
+- `tvd` — computes Total Variation Distance. It takes the absolute difference between expected and observed probability for each outcome, sums them, and halves the result. A TVD of 0 means the distributions are identical; a TVD of 1 means they share no probability mass.
+- `overlap_fidelity` — computes the Bhattacharyya overlap: the sum of geometric means of matching probabilities. A score of 1 means perfect agreement; 0 means no overlap.
+
 ```python
 import math
 
 def normalize_counts(counts, shots):
-	return {k: v / shots for k, v in counts.items()}
+    return {k: v / shots for k, v in counts.items()}
 
 def tvd(expected, observed):
-	keys = set(expected) | set(observed)
-	return 0.5 * sum(abs(expected.get(k, 0) - observed.get(k, 0)) for k in keys)
+    keys = set(expected) | set(observed)
+    return 0.5 * sum(abs(expected.get(k, 0) - observed.get(k, 0)) for k in keys)
 
 def overlap_fidelity(expected, observed):
-	keys = set(expected) | set(observed)
-	return sum(math.sqrt(expected.get(k, 0) * observed.get(k, 0)) for k in keys)
+    keys = set(expected) | set(observed)
+    return sum(math.sqrt(expected.get(k, 0) * observed.get(k, 0)) for k in keys)
 ```
+
+**Reading the output:** Given an expected balanced distribution and an observed result of `{'0': 560, '1': 464}` at 1024 shots:
+```python
+exp = {'0': 0.5, '1': 0.5}
+obs = normalize_counts({'0': 560, '1': 464}, 1024)  # {'0': 0.547, '1': 0.453}
+print(tvd(exp, obs))            # 0.047  ← small distance, likely acceptable
+print(overlap_fidelity(exp, obs))  # ~0.999 ← high overlap
+```
+Apply your predeclared threshold (e.g. TVD ≤ 0.05) to decide pass or investigate.
 
 ## Practical lab
 Notebook target: notebook-05-fidelity-and-metrics.ipynb

@@ -91,6 +91,14 @@ At $N=1024$ shots, the approximate standard error for an ideal balanced circuit 
 Record this reasoning beside the threshold. That turns a benchmark from a copied rule into an auditable decision.
 
 ## Practical benchmark script
+
+**What this code does:** Three circuits are built and named before any of them run — this is the protocol-first principle. Each circuit tests one kind of expected behaviour:
+- **identity**: no gates, just measure. The qubit starts in |0⟩ and is never touched, so every shot should return 0. Any 1s are a setup error.
+- **x_flip**: one X gate flips the qubit to |1⟩ deterministically. Every shot should return 1.
+- **h_superposition**: one H gate creates equal superposition. Shots should be roughly half 0 and half 1.
+
+The `for` loop runs all three with the same `shots` value and prints the raw counts dictionary for each.
+
 ```python
 from qiskit import QuantumCircuit
 from qiskit_aer import AerSimulator
@@ -114,6 +122,14 @@ for name, qc in circuits.items():
     counts = sim.run(qc, shots=shots).result().get_counts()
     print(name, counts)
 ```
+
+**Reading the output:** A passing run looks like:
+```
+identity       {'0': 1024}         ← all 1024 shots returned 0 ✓
+x_flip         {'1': 1024}         ← all 1024 shots returned 1 ✓
+h_superposition {'0': 506, '1': 518} ← roughly balanced ✓
+```
+Apply the benchmark thresholds from the table above to each result. If `identity` shows any 1s, check measurement mapping. If `x_flip` shows any 0s, check whether the X gate was added to the right circuit object. If `h_superposition` is far from balanced, check whether the H gate was applied.
 
 ## Reporting format (required)
 For each circuit report this table:

@@ -112,14 +112,16 @@ Keep the circuit, transpilation settings, measurement mapping, shots, seeds wher
 
 ## Practical code pattern (noise comparison)
 
+**What this function does:** Takes a quality score from an ideal run and a quality score from a noisy run, then returns the fractional quality loss. For example, if the ideal TVD-based score is 0.95 and the noisy score is 0.80, the degradation is `(0.95 - 0.80) / 0.95 ≈ 0.158` — a 15.8% quality drop. Returning `None` when `ideal_score` is zero prevents a division error and signals that the ideal run itself needs investigation before a noise comparison is meaningful.
+
 ```python
 def degradation_percent(ideal_score, noisy_score):
-	if ideal_score == 0:
-		return None
-	return (ideal_score - noisy_score) / ideal_score
+    if ideal_score == 0:
+        return None   # ideal run must be valid before noise comparison is meaningful
+    return (ideal_score - noisy_score) / ideal_score
 ```
 
-Use this with fixed circuit, fixed shots, and repeated runs.
+**Reading the output:** A degradation of 0.05 (5%) is generally acceptable for a shallow circuit. A degradation above 0.20 (20%) usually signals that the circuit is too deep for the simulated noise level, or that the noise model parameters are aggressive. Compare degradation across different circuit depths to see whether the problem scales with depth — if it does, reducing the circuit is more effective than tuning the noise model parameters.
 
 ## Practical lab
 Notebook target: notebook-06-noise-models.ipynb

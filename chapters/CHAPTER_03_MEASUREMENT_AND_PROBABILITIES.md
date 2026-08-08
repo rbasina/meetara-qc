@@ -103,6 +103,9 @@ $|z|<1.96$, so this result is not statistically unusual. Even if it were, the de
 Evaluation compares observed distributions against expected distributions. If expected is 50/50 and observed is far off, you investigate circuit design, noise, or execution settings.
 
 ## Practical example
+
+**What this code does:** The same H-gate circuit is run three times with increasing shot counts. `shots` controls how many independent prepare-and-measure cycles are executed. The for loop compares how spread out the results are at each shot count, demonstrating that more shots give a tighter estimate of the underlying probability.
+
 ```python
 from qiskit import QuantumCircuit
 from qiskit_aer import AerSimulator
@@ -116,6 +119,14 @@ for shots in [128, 512, 2048]:
     counts = sim.run(qc, shots=shots).result().get_counts()
     print(shots, counts)
 ```
+
+**Reading the output:** You will see three lines, each with the shot count and a counts dictionary:
+```
+128  {'0': 63, '1': 65}      ← wide swing possible; 55/73 is plausible here
+512  {'0': 258, '1': 254}    ← smaller relative deviation
+2048 {'0': 1019, '1': 1029}  ← ratio is very close to 50/50
+```
+The key observation is that the ratio stabilises as shots increase. At 128 shots, getting 60/40 is unremarkable. At 2048 shots, 60/40 would be a strong signal that something is wrong. This is why shot count must always be reported alongside a benchmark result.
 
 ## Evaluation table
 

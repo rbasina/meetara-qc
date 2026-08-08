@@ -98,6 +98,10 @@ counts = AerSimulator().run(qc, shots=512).result().get_counts()
 print(counts)  # expect: {'1': ~512}, same as a plain X gate
 ```
 
+**What this code does:** Builds the circuit `H → Z → H → measure` on one qubit starting from |0⟩. Because HZH = X and X|0⟩ = |1⟩, all 512 shots should return 1. This is a unit test for gate identity: if you see a mix of 0s and 1s, the gates are in the wrong order or applied to the wrong qubit index.
+
+**Reading the output:** `{'1': 512}` confirms the identity holds. Try swapping to `Z → H → H` and observe the result changes — that demonstrates non-commutativity directly.
+
 This identity also explains why the circuit chain in Chapter 01 ends at $|1\rangle$: the $HZH$ sequence acts like $X$ on $|0\rangle$.
 
 ### Why a small gate set is powerful
@@ -115,6 +119,9 @@ The Bell state does not mean that each qubit secretly holds the same classical v
 Evaluation often checks whether a known gate sequence produces expected output distributions. Gate-level mistakes are a major source of benchmark failure. Check bit order and measurement mapping before diagnosing a physics problem: a correctly built circuit can appear wrong if its classical output bits are read in the wrong order.
 
 ## Practical example A: deterministic flip
+
+**What each line does:** `qc.x(0)` applies the Pauli-X gate to qubit 0, flipping its state from |0⟩ to |1⟩. Because the initial state is always |0⟩ and the X gate is deterministic, every shot should produce 1. There is no randomness here — this is the quantum equivalent of a classical NOT gate.
+
 ```python
 from qiskit import QuantumCircuit
 from qiskit_aer import AerSimulator
@@ -127,9 +134,18 @@ sim = AerSimulator()
 counts = sim.run(qc, shots=512).result().get_counts()
 print(counts)
 ```
-Expected result: mostly or entirely 1.
+
+**Reading the output:** You should see `{'1': 512}`. Any zeros in the result indicate a circuit wiring error, wrong bit ordering, or that the X gate was applied to the wrong qubit index. On an ideal simulator, there is no legitimate source of error here.
 
 ## Practical example B: Bell state circuit
+
+**What each line does:**
+- `QuantumCircuit(2, 2)` — two qubits and two classical bits.
+- `qc.h(0)` — puts qubit 0 into equal superposition; qubit 1 stays at |0⟩.
+- `qc.cx(0, 1)` — controlled-X (CX or CNOT): flips qubit 1 only when qubit 0 is |1⟩. After this, the two qubits are entangled: the combined state is (|00⟩ + |11⟩)/√2.
+- `qc.measure([0,1], [0,1])` — measures both qubits; results go into classical bits 0 and 1 respectively.
+- Result strings in Qiskit are ordered right-to-left, so `'01'` means qubit 1 = 0, qubit 0 = 1.
+
 ```python
 from qiskit import QuantumCircuit
 from qiskit_aer import AerSimulator
@@ -143,7 +159,8 @@ sim = AerSimulator()
 counts = sim.run(qc, shots=1024).result().get_counts()
 print(counts)
 ```
-Expected behavior: dominant outcomes are 00 and 11.
+
+**Reading the output:** You will see roughly `{'00': 512, '11': 512}`. The outcomes `01` and `10` should be near zero on an ideal simulator — any significant leakage into those outcomes is a sign of a wiring or mapping error. The two qubits always agree: if qubit 0 is 0, qubit 1 is also 0, and vice versa. That correlated behaviour comes from the entanglement created by CX.
 
 ## Evaluation table
 

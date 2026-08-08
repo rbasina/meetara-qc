@@ -103,19 +103,33 @@ An ansatz is the parameterized circuit family. Increasing its depth may improve 
 
 ## Practical code pattern
 
+**What this function does:** Takes a pandas DataFrame where each row is one optimizer run (one seed or one configuration), then computes summary statistics across all runs. This is designed for evaluating variational algorithms where you always run multiple seeds.
+
+- `df[score_col].max()` — the single best score seen across all runs. Do not use this alone; it hides variability.
+- `df[score_col].mean()` — average performance. This is the primary metric for stable evaluation.
+- `df[score_col].std()` — standard deviation. A high std relative to the mean signals that the algorithm is seed-sensitive and unreliable.
+- `quality_per_second` — efficiency ratio. Only meaningful when both quality and runtime are on comparable scales across candidates.
+
 ```python
 import pandas as pd
 
 def summarize_runs(df, score_col="score", runtime_col="runtime_s"):
-	out = {
-		"best_score": df[score_col].max(),
-		"mean_score": df[score_col].mean(),
-		"std_score": df[score_col].std(),
-		"mean_runtime": df[runtime_col].mean(),
-	}
-	out["quality_per_second"] = out["mean_score"] / out["mean_runtime"] if out["mean_runtime"] else None
-	return out
+    out = {
+        "best_score": df[score_col].max(),
+        "mean_score": df[score_col].mean(),
+        "std_score": df[score_col].std(),
+        "mean_runtime": df[runtime_col].mean(),
+    }
+    out["quality_per_second"] = out["mean_score"] / out["mean_runtime"] if out["mean_runtime"] else None
+    return out
 ```
+
+**Reading the output:** Compare two candidate configurations:
+```
+config-a: best=0.91, mean=0.88, std=0.04, runtime=12s  ← consistent, prefer this
+config-b: best=0.95, mean=0.72, std=0.18, runtime=9s   ← high best but unreliable
+```
+Config-b has a higher single best score but a much larger standard deviation. Prefer config-a for a deployable result. Report both rows — hiding config-b's failures would misrepresent the experiment.
 
 ## Real-world example
 Hybrid optimization experiments in operations and scientific domains typically evaluate multiple optimizer settings and initialization seeds before selecting a deployable configuration.

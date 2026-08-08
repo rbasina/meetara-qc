@@ -91,6 +91,13 @@ For a result to be trustworthy beyond a single session, every step that could va
 Before running any code, produce a short protocol document containing: the research question, candidate configurations, primary and secondary metrics, success thresholds, shot count, repeat count, exclusion criteria, and the classical baseline definition.
 
 ### Step 2: Capture the environment snapshot
+
+**What this function does:** Collects everything that could cause a result to differ on another machine or at a later time — the exact installed package versions, the Python runtime version, and the Git commit that the code was checked out from. It writes all of this to a JSON file before any circuits run.
+
+- `importlib.metadata.distributions()` — lists every installed package and its version in the current Python environment.
+- `subprocess.check_output(["git", "rev-parse", "HEAD"])` — reads the current Git commit hash. If the code is not inside a Git repository, it falls back to `"unavailable"` rather than crashing.
+- The snapshot is saved to `artifacts/env_snapshot.json` so it travels alongside the raw counts and the manifest.
+
 ```python
 import sys, importlib.metadata, datetime, json, subprocess
 
@@ -111,7 +118,17 @@ def capture_env(output_path="artifacts/env_snapshot.json"):
         json.dump(snapshot, f, indent=2)
     return snapshot
 ```
-Save this before any circuit runs.
+
+**Reading the output:** The saved JSON will look like:
+```json
+{
+  "timestamp_utc": "2026-08-08T10:23:11Z",
+  "python": "3.12.0",
+  "git_revision": "a3f9c12...",
+  "packages": {"qiskit": "2.5.0", "qiskit-aer": "0.17.0", ...}
+}
+```
+Copy the `git_revision` value into the `source_revision` field of the benchmark manifest. When someone reruns the experiment from this hash and gets the same decision, the result is reproducible. If they get a different decision, the snapshot tells them exactly what environment to investigate.
 
 ### Step 3: Run trials and save raw counts
 Save one JSON or CSV row per (circuit, seed, repeat) before any aggregation. Never overwrite raw files with derived summaries.

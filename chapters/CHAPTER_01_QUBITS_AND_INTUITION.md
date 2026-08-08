@@ -118,40 +118,58 @@ This three-step sequence is the most productive single experiment in the beginne
 
 After step 1, a Z-basis measurement gives 50/50. After step 2, a Z-basis measurement still gives 50/50. The phase change from step 2 is only visible after the H gate in step 3 turns it into a population difference. This is interference made concrete.
 
+**What each line does:**
+- `QuantumCircuit(1, 1)` — one qubit, one classical bit to store the result.
+- `qc.h(0)` — puts the qubit into equal superposition; Bloch-sphere point moves from north pole to positive-x.
+- `qc.z(0)` — flips the relative phase; the point moves to negative-x. The Z-basis counts are still 50/50 here.
+- `qc.h(0)` — converts the phase difference back into a population difference; now the qubit points at the south pole.
+- `qc.measure(0, 0)` — collapses the quantum state and writes 0 or 1 to classical bit 0.
+- `shots=1024` — the whole circuit is repeated 1024 times and outcomes are tallied.
+
 ```python
 from qiskit import QuantumCircuit
 from qiskit_aer import AerSimulator
 
 qc = QuantumCircuit(1, 1)
-qc.h(0)   # |0> -> |+>
-qc.z(0)   # |+> -> |->
-qc.h(0)   # |-> -> |1>
+qc.h(0)   # |0⟩ -> |+⟩
+qc.z(0)   # |+⟩ -> |-⟩
+qc.h(0)   # |-⟩ -> |1⟩
 qc.measure(0, 0)
 
 counts = AerSimulator().run(qc, shots=1024).result().get_counts()
 print(counts)  # expect: {'1': ~1024}
 ```
 
+**Reading the output:** `counts` is a dictionary such as `{'1': 1024}`. A result of all 1s confirms that the Z gate changed the relative phase in a way that only became visible after the second H gate. If you see a mixed result like `{'0': 512, '1': 512}`, the Z gate is either missing or the bit order is reversed.
+
 ## Interference Experiment: States That Initially Look the Same
 
 The following two circuits produce the same 50/50 distribution if measured immediately after their first H gate. Add a second H gate, however, and their relative phase becomes visible.
+
+**What the function does:** `counts_for(relative_phase=False)` runs `H → measure`; `counts_for(relative_phase=True)` runs `H → Z → H → measure`. The Z gate is the only difference.
 
 ```python
 from qiskit import QuantumCircuit
 from qiskit_aer import AerSimulator
 
 def counts_for(relative_phase):
-	qc = QuantumCircuit(1, 1)
-	qc.h(0)
-	if relative_phase:
-		qc.z(0)      # changes |+> into |->
-	qc.h(0)          # measures in the X basis
-	qc.measure(0, 0)
-	return AerSimulator().run(qc, shots=1024).result().get_counts()
+    qc = QuantumCircuit(1, 1)
+    qc.h(0)
+    if relative_phase:
+        qc.z(0)      # inserts a relative-phase flip between the two H gates
+    qc.h(0)          # second H converts phase difference into population difference
+    qc.measure(0, 0)
+    return AerSimulator().run(qc, shots=1024).result().get_counts()
 
 print("plus state:", counts_for(relative_phase=False))
 print("minus state:", counts_for(relative_phase=True))
 ```
+
+**Reading the output:**
+- `plus state: {'0': ~1024}` — H applied twice to |0⟩ returns to |0⟩. No phase flip, so all shots land on 0.
+- `minus state: {'1': ~1024}` — the Z gate changed the relative phase, which the second H gate converts to a definite 1.
+
+If you remove the second H gate, both calls return approximately `{'0': 512, '1': 512}` — the phase difference becomes invisible. That is the core lesson: **phase only matters when it is converted to a population difference by a gate**.
 
 Expected result: the first circuit produces 0 and the second produces 1, apart from any intentionally introduced noise. This is interference: amplitudes combine before probabilities are calculated.
 
@@ -161,6 +179,13 @@ Evaluation starts with understanding expected probabilities. If a circuit should
 
 ## Practical example
 Goal: create a qubit in superposition and measure outcomes.
+
+**What each line does:**
+- `QuantumCircuit(1, 1)` — creates a circuit with one qubit and one classical bit.
+- `qc.h(0)` — applies the Hadamard gate to qubit 0, creating the equal-superposition state |+⟩.
+- `qc.measure(0, 0)` — measures qubit 0 and stores the result (0 or 1) in classical bit 0.
+- `sim.run(qc, shots=1024)` — repeats the full prepare-and-measure cycle 1024 times.
+- `get_counts()` — returns how many times each outcome (0 or 1) was observed across all shots.
 
 ```python
 from qiskit import QuantumCircuit
@@ -175,6 +200,8 @@ job = sim.run(qc, shots=1024)
 counts = job.result().get_counts()
 print(counts)
 ```
+
+**Reading the output:** You will see something like `{'0': 508, '1': 516}`. The two counts will not be exactly equal because each shot is a random draw from a 50/50 distribution. A result close to even is expected. A strongly skewed result — for example `{'0': 900, '1': 124}` — would indicate a circuit error, wrong gate, or measurement mapping problem worth investigating.
 
 Expected behavior: counts close to 50 percent 0 and 50 percent 1.
 
